@@ -1,372 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Personal website and dashboard">
-<title>My Personal Website</title>
-<style>
-:root{
-  --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;
-  --primary:#2563eb;--primary2:#1d4ed8;--border:#e5e7eb;
-  --danger:#dc2626;--success:#16a34a;--shadow:0 8px 28px rgba(15,23,42,.08);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-a{text-decoration:none;color:inherit}
-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-.nav{max-width:1200px;margin:auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.logo{font-size:21px;font-weight:800;color:var(--primary)}
-.navlinks{display:flex;gap:6px;flex-wrap:wrap}
-.navlinks button{border:0;background:transparent;padding:8px 11px;border-radius:8px;color:var(--muted)}
-.navlinks button:hover,.navlinks button.active{background:#eff6ff;color:var(--primary)}
-.container{max-width:1200px;margin:auto;padding:28px 20px}
-.page{display:none}.page.active{display:block}
-.hero{min-height:440px;display:grid;grid-template-columns:1.5fr 1fr;align-items:center;gap:40px}
-.hero h1{font-size:clamp(38px,6vw,68px);line-height:1.05;margin-bottom:18px}
-.hero h1 span{color:var(--primary)}
-.hero p{font-size:18px;color:var(--muted);max-width:650px}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}
-.btn{border:1px solid var(--border);background:var(--card);padding:10px 16px;border-radius:9px;font-weight:600}
-.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
-.btn.primary:hover{background:var(--primary2)}
-.btn.danger{color:#fff;background:var(--danger);border-color:var(--danger)}
-.profile-card,.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
-.profile-card{text-align:center}
-.avatar{width:130px;height:130px;border-radius:50%;background:#dbeafe;color:var(--primary);display:grid;place-items:center;font-size:46px;font-weight:800;margin:0 auto 15px}
-.section-title{margin:25px 0 15px}
-.section-title h2{font-size:28px}.section-title p{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.stat{padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px}
-.stat b{display:block;font-size:30px;color:var(--primary)}
-.form{display:grid;gap:12px}
-input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:var(--text);outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--primary)}
-textarea{min-height:110px;resize:vertical}
-.item{padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--card);margin-bottom:12px}
-.item h3{margin-bottom:5px}.item p{color:var(--muted)}
-.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.tag{font-size:12px;padding:4px 8px;background:#eff6ff;color:var(--primary);border-radius:20px}
-.item-actions{display:flex;gap:7px;margin-top:12px}
-.small{font-size:13px;color:var(--muted)}
-.search{margin-bottom:15px}
-.empty{text-align:center;padding:30px;color:var(--muted)}
-footer{margin-top:50px;border-top:1px solid var(--border);padding:25px;text-align:center;color:var(--muted)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
-.modal.show{display:flex}.modal-box{max-width:600px;width:100%;background:var(--card);border-radius:16px;padding:22px;max-height:90vh;overflow:auto}
-.close{float:right;border:0;background:transparent;font-size:24px}
-.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:white;padding:12px 17px;border-radius:9px;display:none;z-index:200}
-.toast.show{display:block}
-@media(max-width:850px){
- .hero{grid-template-columns:1fr}.grid,.grid2{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}
- .nav{align-items:flex-start;flex-direction:column}.navlinks{width:100%;overflow:auto;flex-wrap:nowrap}
-}
-@media(max-width:550px){
- .container{padding:20px 14px}.grid,.grid2,.stats{grid-template-columns:1fr}
- .hero{min-height:auto;padding:25px 0}.hero h1{font-size:43px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>আমার প্রথম ওয়েবসাইট</title>
+    <style>
+        /* --- সাধারণ রিসেট এবং ফন্ট --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- নেভিগেশন বার --- */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: #ecf0f1;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #3498db;
+        }
+
+        /* --- হিরো সেকশন --- */
+        .hero {
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* --- সার্ভিস সেকশন --- */
+        .services {
+            padding: 60px 5%;
+            text-align: center;
+        }
+
+        .services h2 {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: #2980b9;
+        }
+
+        /* --- ফুটার --- */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        /* --- রেসপনসিভ ডিজাইন --- */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<header>
-<nav class="nav">
-  <div class="logo" id="siteLogo">MY WEBSITE</div>
-  <div class="navlinks">
-    <button class="navbtn active" data-page="home">Home</button>
-    <button class="navbtn" data-page="about">About</button>
-    <button class="navbtn" data-page="projects">Projects</button>
-    <button class="navbtn" data-page="blog">Blog</button>
-    <button class="navbtn" data-page="dashboard">Dashboard</button>
-    <button class="navbtn" data-page="contact">Contact</button>
-    <button id="themeBtn" title="Toggle theme">🌙</button>
-  </div>
-</nav>
-</header>
+    <!-- হেডার / নেভিগেশন -->
+    <header>
+        <div class="logo">আমার ব্র্যান্ড</div>
+        <nav>
+            <ul>
+                <li><a href="#">হোম</a></li>
+                <li><a href="#">সম্পর্কে</a></li>
+                <li><a href="#">সার্ভিস</a></li>
+                <li><a href="#">যোগাযোগ</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<main class="container">
+    <!-- হিরো সেকশন -->
+    <section class="hero">
+        <h1>স্বাগতম আমার ওয়েবসাইটে</h1>
+        <p>এটি একটি সাধারণ HTML এবং CSS দিয়ে তৈরি সুন্দর ওয়েবপেজ। আপনি চাইলে এটি কাস্টমাইজ করতে পারেন।</p>
+        <a href="#" class="btn">আরও জানুন</a>
+    </section>
 
-<section id="home" class="page active">
-  <div class="hero">
-    <div>
-      <div class="small">WELCOME TO MY WEBSITE</div>
-      <h1>Hello, I'm <span id="heroName">Your Name</span>.</h1>
-      <p id="heroBio">This is my personal website where I share my work, projects, learning journey and ideas.</p>
-      <div class="actions">
-        <button class="btn primary" onclick="showPage('projects')">View My Work</button>
-        <button class="btn" onclick="showPage('contact')">Contact Me</button>
-      </div>
-    </div>
-    <div class="profile-card">
-      <div class="avatar" id="avatar">YN</div>
-      <h2 id="cardName">Your Name</h2>
-      <p class="small" id="cardRole">Personal Website</p>
-    </div>
-  </div>
-</section>
+    <!-- সার্ভিস সেকশন -->
+    <section class="services">
+        <h2>আমাদের সার্ভিসসমূহ</h2>
+        <div class="cards-container">
+            <div class="card">
+                <h3>ওয়েব ডিজাইন</h3>
+                <p>আকর্ষণীয় এবং রেসপনসিভ ওয়েবসাইট ডিজাইন করা হয়।</p>
+            </div>
+            <div class="card">
+                <h3>গ্রাফিক ডিজাইন</h3>
+                <p>লোগো, ব্যানার এবং অন্যান্য গ্রাফিক্স তৈরি করা হয়।</p>
+            </div>
+            <div class="card">
+                <h3>ডিজিটাল মার্কেটিং</h3>
+                <p>আপনার ব্যবসা বৃদ্ধির জন্য অনলাইন মার্কেটিং সেবা।</p>
+            </div>
+        </div>
+    </section>
 
-<section id="about" class="page">
-  <div class="section-title"><h2>About Me</h2><p>My profile, skills and goals.</p></div>
-  <div class="grid2">
-    <div class="card">
-      <h3>My Story</h3><br>
-      <p id="aboutText">Write your introduction here. You can change this information from the HTML file.</p>
-    </div>
-    <div class="card">
-      <h3>Skills</h3><br>
-      <div id="skillsList" class="meta"></div>
-    </div>
-  </div>
-</section>
+    <!-- ফুটার -->
+    <footer>
+        <p>&copy; ২০২৬ আমার ব্র্যান্ড। সর্বস্বত্ব সংরক্ষিত।</p>
+    </footer>
 
-<section id="projects" class="page">
-  <div class="section-title"><h2>My Projects</h2><p>Projects and work I want to showcase.</p></div>
-  <div class="actions">
-    <button class="btn primary" onclick="openModal('project')">+ Add Project</button>
-  </div>
-  <br>
-  <input class="search" id="projectSearch" placeholder="Search projects..." oninput="renderProjects()">
-  <div id="projectsList"></div>
-</section>
-
-<section id="blog" class="page">
-  <div class="section-title"><h2>Blog & Articles</h2><p>My articles, thoughts and useful resources.</p></div>
-  <div class="actions"><button class="btn primary" onclick="openModal('post')">+ Add Article</button></div><br>
-  <input class="search" id="postSearch" placeholder="Search articles..." oninput="renderPosts()">
-  <div id="postsList"></div>
-</section>
-
-<section id="dashboard" class="page">
-  <div class="section-title"><h2>Personal Dashboard</h2><p>Your data is stored locally in this browser.</p></div>
-  <div class="stats">
-    <div class="stat"><span>Tasks</span><b id="taskCount">0</b></div>
-    <div class="stat"><span>Completed</span><b id="doneCount">0</b></div>
-    <div class="stat"><span>Projects</span><b id="dashProjectCount">0</b></div>
-    <div class="stat"><span>Ideas</span><b id="ideaCount">0</b></div>
-  </div>
-
-  <div class="section-title"><h2>Tasks</h2><p>Manage your daily work.</p></div>
-  <div class="card">
-    <form class="form" id="taskForm">
-      <input id="taskTitle" required placeholder="Task title">
-      <div class="grid2">
-        <select id="taskPriority"><option>Low</option><option selected>Medium</option><option>High</option></select>
-        <input id="taskDate" type="date">
-      </div>
-      <button class="btn primary">Add Task</button>
-    </form>
-  </div><br>
-  <div id="tasksList"></div>
-
-  <div class="section-title"><h2>Quick Notes</h2><p>Private notes stored in this browser.</p></div>
-  <div class="card">
-    <form class="form" id="noteForm">
-      <input id="noteTitle" required placeholder="Note title">
-      <textarea id="noteText" required placeholder="Write your note..."></textarea>
-      <button class="btn primary">Save Note</button>
-    </form>
-  </div><br>
-  <div id="notesList"></div>
-
-  <div class="section-title"><h2>Ideas</h2><p>Keep your future ideas organized.</p></div>
-  <div class="card">
-    <form class="form" id="ideaForm">
-      <input id="ideaTitle" required placeholder="Idea title">
-      <textarea id="ideaText" placeholder="Describe the idea..."></textarea>
-      <button class="btn primary">Save Idea</button>
-    </form>
-  </div><br>
-  <div id="ideasList"></div>
-
-  <div class="section-title"><h2>Data Backup</h2><p>Export your local data before changing browser/device.</p></div>
-  <div class="actions">
-    <button class="btn" onclick="exportData()">⬇ Export Data</button>
-    <label class="btn">⬆ Import Data <input type="file" id="importFile" accept=".json" hidden></label>
-    <button class="btn danger" onclick="clearAllData()">Clear All Data</button>
-  </div>
-</section>
-
-<section id="contact" class="page">
-  <div class="section-title"><h2>Contact Me</h2><p>This demo form does not send email or use a database.</p></div>
-  <div class="grid2">
-    <div class="card">
-      <h3>Send a Message</h3><br>
-      <form class="form" id="contactForm">
-        <input id="contactName" required placeholder="Your name">
-        <input id="contactEmail" type="email" required placeholder="Your email">
-        <textarea id="contactMessage" required placeholder="Your message"></textarea>
-        <button class="btn primary">Submit</button>
-      </form>
-    </div>
-    <div class="card">
-      <h3>My Contact</h3><br>
-      <p>Email: <span id="emailText">your@email.com</span></p>
-      <p>Location: <span id="locationText">Bangladesh</span></p>
-      <p>Website: Personal Website</p>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<footer>
-  <p>© <span id="year"></span> <span id="footerName">Your Name</span>. All Rights Reserved.</p>
-</footer>
-
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <button class="close" onclick="closeModal()">×</button>
-    <h2 id="modalTitle">Add</h2><br>
-    <form class="form" id="modalForm"></form>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
-
-<script>
-const KEY="personal_website_v1";
-let data=JSON.parse(localStorage.getItem(KEY)||'null')||{
-  projects:[],posts:[],tasks:[],notes:[],ideas:[],
-  settings:{name:"Your Name",role:"Personal Website",email:"your@email.com",location:"Bangladesh"}
-};
-
-function save(){localStorage.setItem(KEY,JSON.stringify(data));updateAll()}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800)}
-function showPage(id){
- document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
- document.getElementById(id).classList.add("active");
- document.querySelectorAll(".navbtn").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
- window.scrollTo({top:0,behavior:"smooth"});
- if(id==="dashboard") updateAll();
-}
-document.querySelectorAll(".navbtn").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
-
-function initials(name){
- return name.split(" ").filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"YN";
-}
-function updateProfile(){
- const s=data.settings;
- document.getElementById("heroName").textContent=s.name;
- document.getElementById("cardName").textContent=s.name;
- document.getElementById("footerName").textContent=s.name;
- document.getElementById("cardRole").textContent=s.role;
- document.getElementById("avatar").textContent=initials(s.name);
- document.getElementById("emailText").textContent=s.email;
- document.getElementById("locationText").textContent=s.location;
-}
-function updateStats(){
- document.getElementById("taskCount").textContent=data.tasks.length;
- document.getElementById("doneCount").textContent=data.tasks.filter(x=>x.done).length;
- document.getElementById("dashProjectCount").textContent=data.projects.length;
- document.getElementById("ideaCount").textContent=data.ideas.length;
-}
-function updateAll(){updateProfile();updateStats();renderProjects();renderPosts();renderTasks();renderNotes();renderIdeas()}
-
-function renderProjects(){
- const q=(document.getElementById("projectSearch")?.value||"").toLowerCase();
- const a=data.projects.filter(x=>(x.title+" "+x.description+" "+x.category).toLowerCase().includes(q));
- document.getElementById("projectsList").innerHTML=a.length?a.map((x,i)=>`
- <div class="item"><h3>${esc(x.title)}</h3><p>${esc(x.description)}</p>
- <div class="meta"><span class="tag">${esc(x.category||"Project")}</span></div>
- <div class="item-actions"><button class="btn" onclick="deleteItem('projects',${data.projects.indexOf(x)})">Delete</button>${x.link?`<a class="btn primary" href="${safeUrl(x.link)}" target="_blank">Open</a>`:""}</div></div>`).join(""):`<div class="empty">No projects yet.</div>`;
-}
-function renderPosts(){
- const q=(document.getElementById("postSearch")?.value||"").toLowerCase();
- const a=data.posts.filter(x=>(x.title+" "+x.content+" "+x.category).toLowerCase().includes(q));
- document.getElementById("postsList").innerHTML=a.length?a.map(x=>`
- <div class="item"><h3>${esc(x.title)}</h3><p>${esc(x.content)}</p><div class="meta"><span class="tag">${esc(x.category||"Article")}</span><span class="small">${esc(x.date)}</span></div>
- <div class="item-actions"><button class="btn" onclick="deleteItem('posts',${data.posts.indexOf(x)})">Delete</button></div></div>`).join(""):`<div class="empty">No articles yet.</div>`;
-}
-function renderTasks(){
- const el=document.getElementById("tasksList");
- el.innerHTML=data.tasks.length?data.tasks.map((x,i)=>`
- <div class="item"><h3 style="${x.done?'text-decoration:line-through;opacity:.6':''}">${esc(x.title)}</h3>
- <div class="meta"><span class="tag">${esc(x.priority)}</span>${x.date?`<span class="small">Due: ${esc(x.date)}</span>`:""}</div>
- <div class="item-actions"><button class="btn" onclick="toggleTask(${i})">${x.done?"Undo":"Complete"}</button><button class="btn danger" onclick="deleteItem('tasks',${i})">Delete</button></div></div>`).join(""):`<div class="empty">No tasks yet.</div>`;
-}
-function renderNotes(){
- document.getElementById("notesList").innerHTML=data.notes.length?data.notes.map((x,i)=>`
- <div class="item"><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><div class="item-actions"><button class="btn danger" onclick="deleteItem('notes',${i})">Delete</button></div></div>`).join(""):`<div class="empty">No notes yet.</div>`;
-}
-function renderIdeas(){
- document.getElementById("ideasList").innerHTML=data.ideas.length?data.ideas.map((x,i)=>`
- <div class="item"><h3>${esc(x.title)}</h3><p>${esc(x.text||"")}</p><div class="item-actions"><button class="btn danger" onclick="deleteItem('ideas',${i})">Delete</button></div></div>`).join(""):`<div class="empty">No ideas yet.</div>`;
-}
-function deleteItem(type,i){if(confirm("Delete this item?")){data[type].splice(i,1);save();toast("Deleted")}}
-function toggleTask(i){data.tasks[i].done=!data.tasks[i].done;save();toast(data.tasks[i].done?"Task completed":"Task reopened")}
-
-document.getElementById("taskForm").onsubmit=e=>{
- e.preventDefault();data.tasks.unshift({title:taskTitle.value,priority:taskPriority.value,date:taskDate.value,done:false});
- e.target.reset();save();toast("Task added");
-};
-document.getElementById("noteForm").onsubmit=e=>{
- e.preventDefault();data.notes.unshift({title:noteTitle.value,text:noteText.value,date:new Date().toISOString()});
- e.target.reset();save();toast("Note saved");
-};
-document.getElementById("ideaForm").onsubmit=e=>{
- e.preventDefault();data.ideas.unshift({title:ideaTitle.value,text:ideaText.value,date:new Date().toISOString()});
- e.target.reset();save();toast("Idea saved");
-};
-document.getElementById("contactForm").onsubmit=e=>{
- e.preventDefault();toast("Message received locally. No database/email is connected.");e.target.reset();
-};
-
-function openModal(type){
- const form=document.getElementById("modalForm"), title=document.getElementById("modalTitle");
- if(type==="project"){
-  title.textContent="Add Project";
-  form.innerHTML=`<input id="mTitle" required placeholder="Project title"><textarea id="mDesc" required placeholder="Description"></textarea><input id="mCat" placeholder="Category"><input id="mLink" type="url" placeholder="Live URL (optional)"><button class="btn primary">Save Project</button>`;
-  form.onsubmit=e=>{e.preventDefault();data.projects.unshift({title:mTitle.value,description:mDesc.value,category:mCat.value,link:mLink.value});closeModal();save();toast("Project added")};
- }else{
-  title.textContent="Add Article";
-  form.innerHTML=`<input id="mTitle" required placeholder="Article title"><textarea id="mContent" required placeholder="Article content"></textarea><input id="mCat" placeholder="Category"><button class="btn primary">Publish Article</button>`;
-  form.onsubmit=e=>{e.preventDefault();data.posts.unshift({title:mTitle.value,content:mContent.value,category:mCat.value,date:new Date().toLocaleDateString()});closeModal();save();toast("Article added")};
- }
- document.getElementById("modal").classList.add("show");
-}
-function closeModal(){document.getElementById("modal").classList.remove("show")}
-document.getElementById("modal").onclick=e=>{if(e.target.id==="modal")closeModal()}
-
-function exportData(){
- const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="personal-website-backup.json";a.click();URL.revokeObjectURL(a.href);
-}
-document.getElementById("importFile").onchange=e=>{
- const f=e.target.files[0];if(!f)return;
- const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.projects||!d.tasks)throw Error();data=d;save();toast("Data imported")}catch{alert("Invalid backup file.")}};r.readAsText(f);
-};
-function clearAllData(){if(confirm("This will delete all local tasks, notes, ideas, projects and articles. Continue?")){localStorage.removeItem(KEY);location.reload()}}
-
-function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function safeUrl(url){try{const u=new URL(url);return /^https?:$/.test(u.protocol)?u.href:"#"}catch{return "#"}}
-
-document.getElementById("themeBtn").onclick=()=>{
- const dark=document.body.dataset.dark==="1";
- if(dark){
-  document.body.dataset.dark="0";
-  document.documentElement.style.setProperty("--bg","#f5f7fb");
-  document.documentElement.style.setProperty("--card","#fff");
-  document.documentElement.style.setProperty("--text","#172033");
-  document.documentElement.style.setProperty("--muted","#667085");
-  document.documentElement.style.setProperty("--border","#e5e7eb");
-  themeBtn.textContent="🌙";localStorage.setItem("theme","light");
- }else{
-  document.body.dataset.dark="1";
-  document.documentElement.style.setProperty("--bg","#0f172a");
-  document.documentElement.style.setProperty("--card","#111827");
-  document.documentElement.style.setProperty("--text","#f8fafc");
-  document.documentElement.style.setProperty("--muted","#94a3b8");
-  document.documentElement.style.setProperty("--border","#263244");
-  themeBtn.textContent="☀️";localStorage.setItem("theme","dark");
- }
-};
-if(localStorage.getItem("theme")==="dark")document.getElementById("themeBtn").click();
-
-document.getElementById("year").textContent=new Date().getFullYear();
-updateAll();
-</script>
 </body>
 </html>
