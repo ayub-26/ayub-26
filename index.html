@@ -3,209 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আমার প্রথম ওয়েবসাইট</title>
+    <title>টু-ডু অ্যাপ</title>
     <style>
-        /* --- সাধারণ রিসেট এবং ফন্ট --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }
 
         body {
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* --- নেভিগেশন বার --- */
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 5%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+        .app {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav a {
-            color: #ecf0f1;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #3498db;
-        }
-
-        /* --- হিরো সেকশন --- */
-        .hero {
-            background: linear-gradient(135deg, #3498db, #8e44ad);
-            color: white;
+        .app h1 {
             text-align: center;
-            padding: 100px 20px;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
         }
 
-        .hero h1 {
-            font-size: 3rem;
+        .input-area {
+            display: flex;
+            gap: 10px;
             margin-bottom: 20px;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        .input-area input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s;
         }
 
-        .btn {
-            display: inline-block;
-            background-color: #e74c3c;
+        .input-area input:focus {
+            border-color: #667eea;
+        }
+
+        .input-area button {
+            padding: 12px 20px;
+            background: #667eea;
             color: white;
-            padding: 12px 30px;
-            border-radius: 5px;
-            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
             transition: background 0.3s;
         }
 
-        .btn:hover {
-            background-color: #c0392b;
+        .input-area button:hover {
+            background: #5a6fd6;
         }
 
-        /* --- সার্ভিস সেকশন --- */
-        .services {
-            padding: 60px 5%;
-            text-align: center;
-        }
-
-        .services h2 {
-            font-size: 2rem;
-            margin-bottom: 40px;
-            color: #2c3e50;
-        }
-
-        .cards-container {
+        .filters {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 300px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+        .filters button {
+            padding: 6px 15px;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-
-        .card h3 {
-            margin-bottom: 15px;
-            color: #2980b9;
-        }
-
-        /* --- ফুটার --- */
-        footer {
-            background-color: #2c3e50;
+        .filters button.active,
+        .filters button:hover {
+            background: #667eea;
             color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
         }
 
-        /* --- রেসপনসিভ ডিজাইন --- */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 10px;
-            }
+        ul#taskList {
+            list-style: none;
+        }
 
-            .hero h1 {
-                font-size: 2rem;
-            }
+        ul#taskList li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f7f7fb;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s ease;
+        }
 
-            .hero {
-                padding: 60px 20px;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-            nav ul {
-                gap: 15px;
-            }
+        ul#taskList li .task-text {
+            flex: 1;
+            cursor: pointer;
+            margin-left: 10px;
+            word-break: break-word;
+        }
+
+        ul#taskList li.completed .task-text {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        ul#taskList li input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        ul#taskList li .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        ul#taskList li .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #999;
+            padding: 20px 0;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- হেডার / নেভিগেশন -->
-    <header>
-        <div class="logo">আমার ব্র্যান্ড</div>
-        <nav>
-            <ul>
-                <li><a href="#">হোম</a></li>
-                <li><a href="#">সম্পর্কে</a></li>
-                <li><a href="#">সার্ভিস</a></li>
-                <li><a href="#">যোগাযোগ</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="app">
+        <h1>📋 আমার টু-ডু</h1>
 
-    <!-- হিরো সেকশন -->
-    <section class="hero">
-        <h1>স্বাগতম আমার ওয়েবসাইটে</h1>
-        <p>এটি একটি সাধারণ HTML এবং CSS দিয়ে তৈরি সুন্দর ওয়েবপেজ। আপনি চাইলে এটি কাস্টমাইজ করতে পারেন।</p>
-        <a href="#" class="btn">আরও জানুন</a>
-    </section>
-
-    <!-- সার্ভিস সেকশন -->
-    <section class="services">
-        <h2>আমাদের সার্ভিসসমূহ</h2>
-        <div class="cards-container">
-            <div class="card">
-                <h3>ওয়েব ডিজাইন</h3>
-                <p>আকর্ষণীয় এবং রেসপনসিভ ওয়েবসাইট ডিজাইন করা হয়।</p>
-            </div>
-            <div class="card">
-                <h3>গ্রাফিক ডিজাইন</h3>
-                <p>লোগো, ব্যানার এবং অন্যান্য গ্রাফিক্স তৈরি করা হয়।</p>
-            </div>
-            <div class="card">
-                <h3>ডিজিটাল মার্কেটিং</h3>
-                <p>আপনার ব্যবসা বৃদ্ধির জন্য অনলাইন মার্কেটিং সেবা।</p>
-            </div>
+        <div class="input-area">
+            <input type="text" id="taskInput" placeholder="নতুন কাজ লিখুন..." />
+            <button onclick="addTask()">যোগ</button>
         </div>
-    </section>
 
-    <!-- ফুটার -->
-    <footer>
-        <p>&copy; ২০২৬ আমার ব্র্যান্ড। সর্বস্বত্ব সংরক্ষিত।</p>
-    </footer>
+        <div class="filters">
+            <button class="active" onclick="setFilter('all', this)">সব</button>
+            <button onclick="setFilter('active', this)">চলমান</button>
+            <button onclick="setFilter('completed', this)">সম্পন্ন</button>
+        </div>
+
+        <ul id="taskList"></ul>
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <script>
+        // ---- ডেটা ম্যানেজমেন্ট ----
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let currentFilter = 'all';
+
+        const taskInput = document.getElementById('taskInput');
+        const taskList = document.getElementById('taskList');
+        const stats = document.getElementById('stats');
+
+        // ---- সেভ ----
+        function save() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // ---- কাজ যোগ ----
+        function addTask() {
+            const text = taskInput.value.trim();
+            if (!text) {
+                alert('দয়া করে কিছু লিখুন!');
+                return;
+            }
+            tasks.push({ id: Date.now(), text, completed: false });
+            taskInput.value = '';
+            save();
+            render();
+        }
+
+        // এন্টার চাপলে যোগ হবে
+        taskInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // ---- টগল (সম্পন্ন/চলমান) ----
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            save();
+            render();
+        }
+
+        // ---- ডিলিট ----
+        function deleteTask(id) {
+            if (!confirm('এই কাজটি মুছে ফেলবেন?')) return;
+            tasks = tasks.filter(t => t.id !== id);
+            save();
+            render();
+        }
+
+        // ---- ফিল্টার ----
+        function setFilter(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+
+        // ---- রেন্ডার ----
+        function render() {
+            taskList.innerHTML = '';
+
+            let filtered = tasks;
+            if (currentFilter === 'active') filtered = tasks.filter(t => !t.completed);
+            if (currentFilter === 'completed') filtered = tasks.filter(t => t.completed);
+
+            if (filtered.length === 0) {
+                taskList.innerHTML = '<p class="empty-msg">কোনো কাজ নেই 🎉</p>';
+            }
+
+            filtered.forEach(task => {
+                const li = document.createElement('li');
+                if (task.completed) li.classList.add('completed');
+
+                li.innerHTML = `
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} />
+                    <span class="task-text">${escapeHTML(task.text)}</span>
+                    <button class="delete-btn">মুছুন</button>
+                `;
+
+                li.querySelector('input').addEventListener('change', () => toggleTask(task.id));
+                li.querySelector('.task-text').addEventListener('click', () => toggleTask(task.id));
+                li.querySelector('.delete-btn').addEventListener('click', () => deleteTask(task.id));
+
+                taskList.appendChild(li);
+            });
+
+            // স্ট্যাটস
+            const done = tasks.filter(t => t.completed).length;
+            stats.textContent = `মোট: ${tasks.length} | সম্পন্ন: ${done} | বাকি: ${tasks.length - done}`;
+        }
+
+        // XSS থেকে সুরক্ষা
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ---- শুরু ----
+        render();
+    </script>
 
 </body>
 </html>
