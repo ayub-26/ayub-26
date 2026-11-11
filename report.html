@@ -3,61 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📆 মাসিক রিপোর্ট</title>
+    <title>📆 রিপোর্ট</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --bg: #f4f6fb; --card: #fff; --text: #333; --text-muted: #777;
-            --primary: #1e3c72; --primary-2: #2a5298; --income: #2ecc71;
-            --expense: #e74c3c; --border: #e0e6f0; --shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-        [data-theme="dark"] {
-            --bg: #0f1724; --card: #1a2332; --text: #e8eef7; --text-muted: #8a9bb4;
-            --primary: #4a7fd4; --primary-2: #5b8ee6; --income: #34d399;
-            --expense: #f87171; --border: #2a3a52; --shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
+        :root { --bg: #f4f6fb; --card: #fff; --text: #333; --text-muted: #777; --primary: #1e3c72; --primary-2: #2a5298; --income: #2ecc71; --expense: #e74c3c; --border: #e0e6f0; --shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        [data-theme="dark"] { --bg: #0f1724; --card: #1a2332; --text: #e8eef7; --text-muted: #8a9bb4; --primary: #4a7fd4; --primary-2: #5b8ee6; --income: #34d399; --expense: #f87171; --border: #2a3a52; --shadow: 0 4px 15px rgba(0,0,0,0.4); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; transition: background 0.3s, color 0.3s; }
-
         nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
-        nav a {
-            padding: 10px 18px; background: var(--card); color: var(--text); border-radius: 25px;
-            text-decoration: none; font-weight: 600; font-size: 0.9rem; box-shadow: var(--shadow);
-            transition: all 0.3s; border: 2px solid transparent;
-        }
-        nav a:hover { border-color: var(--primary-2); transform: translateY(-2px); }
+        nav a { padding: 10px 18px; background: var(--card); color: var(--text); border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 0.9rem; box-shadow: var(--shadow); border: 2px solid transparent; }
         nav a.active-nav { background: var(--primary); color: white; }
-        #themeToggle { padding: 10px 14px; background: var(--card); border: 2px solid var(--border); border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow); }
-
+        nav button { padding: 10px 14px; background: var(--card); border: 2px solid var(--border); border-radius: 25px; cursor: pointer; font-size: 1rem; color: var(--text); }
         .container { max-width: 900px; margin: 0 auto; }
         h1 { text-align: center; color: var(--primary); margin-bottom: 5px; }
         .subtitle { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; }
-
-        .month-selector {
-            display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; align-items: center;
-        }
-        .month-selector button {
-            padding: 10px 18px; background: var(--card); border: 2px solid var(--border);
-            border-radius: 10px; cursor: pointer; color: var(--text); font-size: 1.1rem;
-            transition: all 0.3s;
-        }
-        .month-selector button:hover { border-color: var(--primary-2); }
-        .month-selector span {
-            font-size: 1.1rem; font-weight: bold; color: var(--primary); min-width: 180px; text-align: center;
-        }
-
-        .report-card {
-            background: var(--card); border-radius: 18px; padding: 22px;
-            box-shadow: var(--shadow); margin-bottom: 20px;
-        }
+        .month-selector { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .month-selector button { padding: 10px 18px; background: var(--card); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; color: var(--text); font-size: 1.1rem; }
+        .month-selector span { font-size: 1.1rem; font-weight: bold; color: var(--primary); min-width: 180px; text-align: center; }
+        .report-card { background: var(--card); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); margin-bottom: 20px; }
         .report-card h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.1rem; }
-
         .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         @media (max-width: 600px) { .stat-grid { grid-template-columns: 1fr; } }
-
-        .stat-box {
-            background: var(--bg); border-radius: 12px; padding: 18px; text-align: center;
-            border-left: 4px solid var(--primary-2);
-        }
+        .stat-box { background: var(--bg); border-radius: 12px; padding: 18px; text-align: center; border-left: 4px solid var(--primary-2); }
         .stat-box.income { border-left-color: var(--income); }
         .stat-box.expense { border-left-color: var(--expense); }
         .stat-box.balance { border-left-color: var(--primary); }
@@ -66,32 +33,11 @@
         .stat-box.income .val { color: var(--income); }
         .stat-box.expense .val { color: var(--expense); }
         .stat-box.balance .val { color: var(--primary); }
-
         .cat-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .cat-table th, .cat-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        .cat-table th { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
-        .cat-table td { font-size: 0.95rem; }
-        .cat-table tr:last-child td { border-bottom: none; }
-
-        .bar-bg {
-            background: var(--bg); border-radius: 20px; height: 8px; overflow: hidden; margin-top: 5px;
-        }
-        .bar-fill {
-            height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--primary), var(--primary-2));
-            transition: width 0.6s ease;
-        }
-
-        .empty {
-            text-align: center; color: var(--text-muted); padding: 40px 20px;
-            background: var(--card); border-radius: 15px;
-        }
-
-        .btn-export {
-            display: block; width: 100%; padding: 14px; background: var(--primary);
-            color: white; border: none; border-radius: 10px; font-size: 1rem;
-            font-weight: bold; cursor: pointer; margin-top: 15px; transition: background 0.3s;
-        }
-        .btn-export:hover { background: var(--primary-2); }
+        .cat-table th { color: var(--text-muted); font-size: 0.85rem; }
+        .empty { text-align: center; color: var(--text-muted); padding: 40px 20px; background: var(--card); border-radius: 15px; }
+        .btn-export { display: block; width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -100,156 +46,104 @@
     <a href="index.html">🏠 হোম</a>
     <a href="chart.html">📊 চার্ট</a>
     <a href="report.html">📆 রিপোর্ট</a>
-    <a href="lock.html">🔐 পিন</a>
     <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+    <button onclick="logout()">🚪 লগআউট</button>
 </nav>
 
 <div class="container">
     <h1>📆 মাসিক রিপোর্ট</h1>
-    <p class="subtitle">মাস অনুযায়ী আপনার আয়-ব্যয়ের সারসংক্ষেপ</p>
-
+    <p class="subtitle">মাস অনুযায়ী আয়-ব্যয়ের সারসংক্ষেপ</p>
     <div class="month-selector">
         <button onclick="changeMonth(-1)">‹</button>
         <span id="monthLabel">-</span>
         <button onclick="changeMonth(1)">›</button>
     </div>
-
     <div id="reportContent"></div>
 </div>
 
 <script src="common.js"></script>
 <script>
-    if (!checkPin()) throw new Error('locked');
+(async () => {
+    const user = await requireAuth();
+    if (!user) return;
 
-    const transactions = getTransactions();
+    const { data } = await supabaseClient.from('transactions').select('*');
+    const transactions = data || [];
     const now = new Date();
-    let currentMonth = now.getMonth();
-    let currentYear = now.getFullYear();
+    let month = now.getMonth(), year = now.getFullYear();
+    const names = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
 
-    const monthNames = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন',
-                        'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
-
-    function changeMonth(dir) {
-        currentMonth += dir;
-        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    function changeMonth(d) {
+        month += d;
+        if (month > 11) { month = 0; year++; }
+        if (month < 0) { month = 11; year--; }
         renderReport();
     }
+    window.changeMonth = changeMonth;
 
     function renderReport() {
-        document.getElementById('monthLabel').textContent = `${monthNames[currentMonth]} ${currentYear}`;
-
-        const prefix = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+        document.getElementById('monthLabel').textContent = `${names[month]} ${year}`;
+        const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
         const monthly = transactions.filter(t => t.date && t.date.startsWith(prefix));
 
         if (monthly.length === 0) {
-            document.getElementById('reportContent').innerHTML = `<div class="empty">এই মাসে কোনো লেনদেন নেই 📭</div>`;
+            document.getElementById('reportContent').innerHTML = '<div class="empty">এই মাসে কোনো লেনদেন নেই 📭</div>';
             return;
         }
 
-        const income = monthly.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-        const expense = monthly.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const income = monthly.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+        const expense = monthly.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
         const balance = income - expense;
 
-        // ক্যাটাগরি ভিত্তিক ব্যয়
         const catMap = {};
-        monthly.filter(t => t.type === 'expense').forEach(t => {
-            catMap[t.category] = (catMap[t.category] || 0) + t.amount;
-        });
+        monthly.filter(t => t.type === 'expense').forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + Number(t.amount); });
         const catSorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
-        const maxCat = catSorted.length > 0 ? catSorted[0][1] : 1;
 
-        // দিন ভিত্তিক সবচেয়ে বেশি খরচ
         const dayMap = {};
-        monthly.filter(t => t.type === 'expense').forEach(t => {
-            dayMap[t.date] = (dayMap[t.date] || 0) + t.amount;
-        });
-        const highestDay = Object.entries(dayMap).sort((a, b) => b[1] - a[1])[0];
+        monthly.filter(t => t.type === 'expense').forEach(t => { dayMap[t.date] = (dayMap[t.date] || 0) + Number(t.amount); });
+        const topDay = Object.entries(dayMap).sort((a, b) => b[1] - a[1])[0];
 
-        // সব লেনদেন কাউন্ট
-        const incomeCount = monthly.filter(t => t.type === 'income').length;
-        const expenseCount = monthly.filter(t => t.type === 'expense').length;
+        let rows = catSorted.map(([c, a]) => `<tr><td>${escapeHTML(c)}</td><td style="text-align:right; color: var(--expense); font-weight:bold;">${formatBDT(a)}</td><td style="text-align:right; color: var(--text-muted);">${((a / expense) * 100).toFixed(1)}%</td></tr>`).join('');
 
-        let catRows = catSorted.map(([cat, amt]) => `
-            <tr>
-                <td>${escapeHTML(cat)}</td>
-                <td style="text-align: right; color: var(--expense); font-weight: bold;">${formatBDT(amt)}</td>
-                <td style="text-align: right; color: var(--text-muted); font-size: 0.85rem;">${((amt / expense) * 100).toFixed(1)}%</td>
-            </tr>
-            <tr><td colspan="3" style="padding: 0;"><div class="bar-bg"><div class="bar-fill" style="width: ${(amt / maxCat) * 100}%"></div></div></td></tr>
-        `).join('');
-
-        const html = `
+        document.getElementById('reportContent').innerHTML = `
             <div class="report-card">
-                <h2>📊 সারসংক্ষেপ - ${monthNames[currentMonth]} ${currentYear}</h2>
+                <h2>📊 সারসংক্ষেপ - ${names[month]} ${year}</h2>
                 <div class="stat-grid">
-                    <div class="stat-box income">
-                        <div class="lbl">মোট আয়</div>
-                        <div class="val">${formatBDT(income)}</div>
-                    </div>
-                    <div class="stat-box expense">
-                        <div class="lbl">মোট ব্যয়</div>
-                        <div class="val">${formatBDT(expense)}</div>
-                    </div>
-                    <div class="stat-box balance">
-                        <div class="lbl">ব্যালেন্স</div>
-                        <div class="val">${formatBDT(balance)}</div>
-                    </div>
+                    <div class="stat-box income"><div class="lbl">মোট আয়</div><div class="val">${formatBDT(income)}</div></div>
+                    <div class="stat-box expense"><div class="lbl">মোট ব্যয়</div><div class="val">${formatBDT(expense)}</div></div>
+                    <div class="stat-box balance"><div class="lbl">ব্যালেন্স</div><div class="val">${formatBDT(balance)}</div></div>
                 </div>
             </div>
-
             <div class="report-card">
-                <h2>📋 লেনদেনের বিস্তারিত</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.8;">
+                <h2>📋 বিস্তারিত</h2>
+                <p style="line-height: 1.9; color: var(--text-muted);">
                     • মোট লেনদেন: <b style="color: var(--text);">${monthly.length}টি</b><br>
-                    • আয়ের সংখ্যা: <b style="color: var(--income);">${incomeCount}টি</b> | ব্যয়ের সংখ্যা: <b style="color: var(--expense);">${expenseCount}টি</b><br>
+                    • আয়: <b style="color: var(--income);">${monthly.filter(t => t.type === 'income').length}টি</b> | ব্যয়: <b style="color: var(--expense);">${monthly.filter(t => t.type === 'expense').length}টি</b><br>
                     • গড় দৈনিক খরচ: <b style="color: var(--expense);">${formatBDT(expense / 30)}</b><br>
-                    ${highestDay ? `• সবচেয়ে বেশি খরচ: <b>${highestDay[0]}</b> তারিখে <b style="color: var(--expense);">${formatBDT(highestDay[1])}</b>` : ''}
+                    ${topDay ? `• সবচেয়ে বেশি খরচ: <b>${topDay[0]}</b> তারিখে <b style="color: var(--expense);">${formatBDT(topDay[1])}</b>` : ''}
                 </p>
             </div>
-
-            ${catSorted.length > 0 ? `
-            <div class="report-card">
-                <h2>🏷️ ক্যাটাগরি অনুযায়ী ব্যয়</h2>
-                <table class="cat-table">
-                    <thead>
-                        <tr><th>ক্যাটাগরি</th><th style="text-align: right;">পরিমাণ</th><th style="text-align: right;">শতাংশ</th></tr>
-                    </thead>
-                    <tbody>${catRows}</tbody>
-                </table>
-            </div>
-            ` : ''}
-
-            <button class="btn-export" onclick="exportMonthCSV()">📤 এই মাসের রিপোর্ট CSV ডাউনলোড</button>
+            ${catSorted.length ? `<div class="report-card"><h2>🏷️ ক্যাটাগরি অনুযায়ী ব্যয়</h2><table class="cat-table"><thead><tr><th>ক্যাটাগরি</th><th style="text-align:right;">পরিমাণ</th><th style="text-align:right;">শতাংশ</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''}
+            <button class="btn-export" onclick="exportMonthCSV()">📤 এই মাসের CSV ডাউনলোড</button>
         `;
-
-        document.getElementById('reportContent').innerHTML = html;
     }
 
-    function exportMonthCSV() {
-        const prefix = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    window.exportMonthCSV = function() {
+        const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
         const monthly = transactions.filter(t => t.date && t.date.startsWith(prefix));
-        if (monthly.length === 0) return alert('এই মাসে কোনো লেনদেন নেই!');
-
+        if (!monthly.length) return alert('কোনো ডেটা নেই!');
         const rows = [['বিবরণ', 'ধরন', 'ক্যাটাগরি', 'তারিখ', 'পরিমাণ']];
-        monthly.forEach(t => {
-            rows.push([t.desc, t.type === 'income' ? 'আয়' : 'ব্যয়', t.category, t.date, t.amount]);
-        });
-
-        // মোট
-        const income = monthly.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-        const expense = monthly.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-        rows.push([], ['মোট আয়', '', '', '', income], ['মোট ব্যয়', '', '', '', expense], ['ব্যালেন্স', '', '', '', income - expense]);
-
-        const csv = rows.map(r => r.map(c => `"${c || ''}"`).join(',')).join('\n');
+        monthly.forEach(t => rows.push([t.description, t.type === 'income' ? 'আয়' : 'ব্যয়', t.category, t.date, t.amount]));
+        const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `report_${monthNames[currentMonth]}_${currentYear}.csv`;
-        link.click();
-    }
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `report_${names[month]}_${year}.csv`;
+        a.click();
+    };
 
     renderReport();
+})();
 </script>
 
 </body>
