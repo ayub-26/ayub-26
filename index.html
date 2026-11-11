@@ -3,100 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💰 আমার হিসাব - হোম</title>
+    <title>💰 আমার হিসাব</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg: #f4f6fb;
-            --card: #ffffff;
-            --text: #333;
-            --text-muted: #777;
-            --primary: #1e3c72;
-            --primary-2: #2a5298;
-            --income: #2ecc71;
-            --expense: #e74c3c;
-            --border: #e0e6f0;
-            --shadow: 0 4px 12px rgba(0,0,0,0.06);
+            --bg: #f4f6fb; --card: #fff; --text: #333; --text-muted: #777;
+            --primary: #1e3c72; --primary-2: #2a5298;
+            --income: #2ecc71; --expense: #e74c3c;
+            --border: #e0e6f0; --shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-
         [data-theme="dark"] {
-            --bg: #0f1724;
-            --card: #1a2332;
-            --text: #e8eef7;
-            --text-muted: #8a9bb4;
-            --primary: #4a7fd4;
-            --primary-2: #5b8ee6;
-            --income: #34d399;
-            --expense: #f87171;
-            --border: #2a3a52;
-            --shadow: 0 4px 15px rgba(0,0,0,0.4);
+            --bg: #0f1724; --card: #1a2332; --text: #e8eef7; --text-muted: #8a9bb4;
+            --primary: #4a7fd4; --primary-2: #5b8ee6;
+            --income: #34d399; --expense: #f87171;
+            --border: #2a3a52; --shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; transition: background 0.3s, color 0.3s; }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 20px;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        /* নেভিগেশন */
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
+        nav { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 25px; }
         nav a {
-            padding: 10px 18px;
-            background: var(--card);
-            color: var(--text);
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            padding: 10px 18px; background: var(--card); color: var(--text); border-radius: 25px;
+            text-decoration: none; font-weight: 600; font-size: 0.9rem; box-shadow: var(--shadow);
+            transition: all 0.3s; border: 2px solid transparent;
         }
-
         nav a:hover { border-color: var(--primary-2); transform: translateY(-2px); }
         nav a.active-nav { background: var(--primary); color: white; }
-
-        #themeToggle {
-            padding: 10px 14px;
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: var(--shadow);
+        nav button {
+            padding: 10px 14px; background: var(--card); border: 2px solid var(--border);
+            border-radius: 25px; cursor: pointer; font-size: 1rem; box-shadow: var(--shadow);
+            color: var(--text);
         }
 
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--card);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: var(--shadow);
+            max-width: 900px; margin: 0 auto; background: var(--card);
+            border-radius: 20px; padding: 25px; box-shadow: var(--shadow);
         }
 
         h1 { text-align: center; color: var(--primary); margin-bottom: 5px; }
         .subtitle { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
 
+        /* Auth */
+        .auth-box { max-width: 380px; margin: 40px auto; }
+        .auth-box h2 { text-align: center; color: var(--primary); margin-bottom: 20px; }
+        .auth-box input {
+            width: 100%; padding: 12px; margin-bottom: 12px;
+            border: 2px solid var(--border); border-radius: 10px;
+            background: var(--bg); color: var(--text); font-size: 1rem;
+        }
+        .auth-box button {
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; font-size: 1rem; font-weight: bold;
+            cursor: pointer; margin-bottom: 10px;
+        }
+        .auth-box button:hover { background: var(--primary-2); }
+        .auth-box .switch { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 10px; }
+        .auth-box .switch a { color: var(--primary-2); cursor: pointer; text-decoration: underline; }
+        .auth-msg { text-align: center; font-size: 0.9rem; margin-bottom: 10px; min-height: 20px; }
+        .auth-msg.error { color: var(--expense); }
+        .auth-msg.success { color: var(--income); }
+
+        /* ব্যালেন্স */
         .balance-card {
             background: linear-gradient(135deg, var(--primary), var(--primary-2));
-            color: white;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
+            color: white; border-radius: 15px; padding: 20px;
+            text-align: center; margin-bottom: 20px;
         }
-
         .balance-card .label { font-size: 0.9rem; opacity: 0.85; }
         .balance-card .amount { font-size: 2.2rem; font-weight: bold; margin: 8px 0; }
         .summary { display: flex; justify-content: space-around; margin-top: 15px; }
@@ -104,151 +76,67 @@
         .summary .sum-label { font-size: 0.8rem; opacity: 0.85; }
         .summary .sum-value { font-size: 1.1rem; font-weight: bold; margin-top: 3px; }
 
-        .form-box {
-            background: var(--bg);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-
+        /* ফর্ম */
+        .form-box { background: var(--bg); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
         .form-box h3 { margin-bottom: 12px; color: var(--primary); font-size: 1rem; }
-
         .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-
         .form-row input, .form-row select {
-            padding: 10px 12px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            outline: none;
-            background: var(--card);
-            color: var(--text);
-            transition: border 0.3s;
+            padding: 10px 12px; border: 2px solid var(--border); border-radius: 8px;
+            font-size: 0.95rem; outline: none; background: var(--card); color: var(--text);
         }
-
         .form-row input:focus, .form-row select:focus { border-color: var(--primary-2); }
         .form-row .desc { flex: 2; min-width: 150px; }
         .form-row .amount { flex: 1; min-width: 110px; }
         .form-row .date { flex: 1; min-width: 130px; }
         .form-row .cat { flex: 1; min-width: 130px; }
-
         .btn-add {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer;
         }
-
         .btn-add:hover { background: var(--primary-2); }
-
         .type-toggle { display: flex; gap: 10px; margin-bottom: 10px; }
         .type-toggle button {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
+            flex: 1; padding: 10px; border: 2px solid var(--border); background: var(--bg);
+            color: var(--text); border-radius: 8px; cursor: pointer; font-weight: bold;
         }
         .type-toggle button.active-income { background: var(--income); color: white; border-color: var(--income); }
         .type-toggle button.active-expense { background: var(--expense); color: white; border-color: var(--expense); }
 
-        .list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+        /* লিস্ট */
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .list-header h3 { color: var(--primary); }
-
+        .list-actions { display: flex; gap: 8px; }
         .filter-select {
-            padding: 6px 10px;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            background: var(--card);
-            color: var(--text);
-            font-size: 0.85rem;
-            cursor: pointer;
+            padding: 6px 10px; border: 2px solid var(--border); border-radius: 8px;
+            background: var(--card); color: var(--text); font-size: 0.85rem; cursor: pointer;
         }
-
         #transactionList { list-style: none; }
-
         #transactionList li {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--bg);
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 5px solid #ccc;
-            animation: fadeIn 0.3s ease;
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg); padding: 12px 15px; border-radius: 10px; margin-bottom: 10px;
+            border-left: 5px solid #ccc; animation: fadeIn 0.3s ease;
         }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-
         #transactionList li.income { border-left-color: var(--income); }
         #transactionList li.expense { border-left-color: var(--expense); }
-
         .tx-info { flex: 1; }
         .tx-desc { font-weight: 600; font-size: 1rem; }
         .tx-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
-
         .tx-amount { font-weight: bold; font-size: 1.05rem; margin: 0 15px; white-space: nowrap; }
         .tx-amount.income { color: var(--income); }
         .tx-amount.expense { color: var(--expense); }
-
         .action-btns { display: flex; gap: 4px; }
-        .action-btns button {
-            background: transparent;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 5px 8px;
-            border-radius: 5px;
-            transition: background 0.2s;
-        }
-        .edit-btn:hover { background: rgba(74, 127, 212, 0.15); }
-        .del-btn:hover { background: rgba(231, 76, 60, 0.15); }
+        .action-btns button { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px 8px; border-radius: 5px; }
+        .action-btns button:hover { background: rgba(0,0,0,0.08); }
+        .empty { text-align: center; color: var(--text-muted); padding: 30px 0; background: var(--bg); border-radius: 10px; }
 
-        .empty {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 30px 0;
-            background: var(--bg);
-            border-radius: 10px;
-        }
-
-        /* এডিট মোডাল */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+        /* মোডাল */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-overlay.show { display: flex; }
-        .modal {
-            background: var(--card);
-            border-radius: 15px;
-            padding: 25px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
+        .modal { background: var(--card); border-radius: 15px; padding: 25px; width: 100%; max-width: 420px; }
         .modal h3 { color: var(--primary); margin-bottom: 15px; }
+
+        .hidden { display: none !important; }
 
         @media (max-width: 600px) {
             .balance-card .amount { font-size: 1.6rem; }
@@ -259,252 +147,348 @@
 </head>
 <body>
 
-<nav>
-    <a href="index.html">🏠 হোম</a>
-    <a href="chart.html">📊 চার্ট</a>
-    <a href="report.html">📆 রিপোর্ট</a>
-    <a href="lock.html">🔐 পিন</a>
-    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
-</nav>
-
-<div class="container">
-    <h1>💰 আমার হিসাব</h1>
-    <p class="subtitle">আয় ও ব্যয়ের সহজ হিসাব</p>
-
-    <div class="balance-card">
-        <div class="label">বর্তমান ব্যালেন্স</div>
-        <div class="amount" id="balance">৳ ০</div>
-        <div class="summary">
-            <div>
-                <div class="sum-label">মোট আয়</div>
-                <div class="sum-value" style="color: #a8e6cf;" id="totalIncome">৳ ০</div>
-            </div>
-            <div>
-                <div class="sum-label">মোট ব্যয়</div>
-                <div class="sum-value" style="color: #ffb3b3;" id="totalExpense">৳ ০</div>
-            </div>
-        </div>
+<!-- লগইন / রেজিস্টার স্ক্রিন -->
+<div id="authScreen" class="container auth-box">
+    <h1 style="text-align: center; margin-bottom: 20px;">💰 আমার হিসাব</h1>
+    <h2 id="authTitle">লগইন করুন</h2>
+    <div class="auth-msg" id="authMsg"></div>
+    <input type="email" id="authEmail" placeholder="ইমেইল" />
+    <input type="password" id="authPassword" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" />
+    <button onclick="handleAuth()" id="authBtn">লগইন</button>
+    <div class="switch">
+        <span id="switchText">অ্যাকাউন্ট নেই?</span>
+        <a onclick="toggleAuthMode()">রেজিস্টার করুন</a>
     </div>
-
-    <div class="form-box">
-        <h3>নতুন লেনদেন যোগ করুন</h3>
-        <div class="type-toggle">
-            <button id="btnIncome" class="active-income" onclick="setType('income')">＋ আয়</button>
-            <button id="btnExpense" onclick="setType('expense')">－ ব্যয়</button>
-        </div>
-        <div class="form-row">
-            <input type="text" id="desc" class="desc" placeholder="বিবরণ (যেমন: বাজার)" />
-            <input type="number" id="amount" class="amount" placeholder="টাকার পরিমাণ" min="0" step="any" />
-        </div>
-        <div class="form-row">
-            <select id="category" class="cat">
-                <option value="সাধারণ">সাধারণ</option>
-                <option value="খাবার">খাবার</option>
-                <option value="যাতায়াত">যাতায়াত</option>
-                <option value="বিল">বিল</option>
-                <option value="শপিং">শপিং</option>
-                <option value="স্বাস্থ্য">স্বাস্থ্য</option>
-                <option value="শিক্ষা">শিক্ষা</option>
-                <option value="বিনোদন">বিনোদন</option>
-                <option value="বেতন">বেতন</option>
-                <option value="উপহার">উপহার</option>
-                <option value="অন্যান্য">অন্যান্য</option>
-            </select>
-            <input type="date" id="date" class="date" />
-        </div>
-        <button class="btn-add" onclick="addTransaction()">যোগ করুন</button>
-    </div>
-
-    <div class="list-header">
-        <h3>লেনদেনের তালিকা</h3>
-        <div style="display: flex; gap: 8px;">
-            <select class="filter-select" id="filter" onchange="render()">
-                <option value="all">সব</option>
-                <option value="income">আয়</option>
-                <option value="expense">ব্যয়</option>
-            </select>
-            <button class="filter-select" onclick="exportCSV()" title="CSV ডাউনলোড">📤 CSV</button>
-        </div>
-    </div>
-    <ul id="transactionList"></ul>
 </div>
 
-<!-- এডিট মোডাল -->
-<div class="modal-overlay" id="editModal">
-    <div class="modal">
-        <h3>✏️ লেনদেন সম্পাদনা</h3>
-        <div class="form-row">
-            <input type="text" id="editDesc" class="desc" placeholder="বিবরণ" />
+<!-- মূল অ্যাপ -->
+<div id="appScreen" class="hidden">
+    <nav>
+        <a href="index.html">🏠 হোম</a>
+        <a href="chart.html">📊 চার্ট</a>
+        <a href="report.html">📆 রিপোর্ট</a>
+        <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+        <button onclick="logout()">🚪 লগআউট</button>
+    </nav>
+
+    <div class="container">
+        <h1>💰 আমার হিসাব</h1>
+        <p class="subtitle" id="userEmail"></p>
+
+        <div class="balance-card">
+            <div class="label">বর্তমান ব্যালেন্স</div>
+            <div class="amount" id="balance">৳ ০</div>
+            <div class="summary">
+                <div>
+                    <div class="sum-label">মোট আয়</div>
+                    <div class="sum-value" style="color: #a8e6cf;" id="totalIncome">৳ ০</div>
+                </div>
+                <div>
+                    <div class="sum-label">মোট ব্যয়</div>
+                    <div class="sum-value" style="color: #ffb3b3;" id="totalExpense">৳ ০</div>
+                </div>
+            </div>
         </div>
-        <div class="form-row">
-            <input type="number" id="editAmount" class="amount" placeholder="পরিমাণ" />
-            <input type="date" id="editDate" class="date" />
+
+        <div class="form-box">
+            <h3>নতুন লেনদেন যোগ করুন</h3>
+            <div class="type-toggle">
+                <button id="btnIncome" class="active-income" onclick="setType('income')">＋ আয়</button>
+                <button id="btnExpense" onclick="setType('expense')">－ ব্যয়</button>
+            </div>
+            <div class="form-row">
+                <input type="text" id="desc" class="desc" placeholder="বিবরণ (যেমন: বাজার)" />
+                <input type="number" id="amount" class="amount" placeholder="টাকার পরিমাণ" min="0" step="any" />
+            </div>
+            <div class="form-row">
+                <select id="category" class="cat">
+                    <option value="সাধারণ">সাধারণ</option>
+                    <option value="খাবার">খাবার</option>
+                    <option value="যাতায়াত">যাতায়াত</option>
+                    <option value="বিল">বিল</option>
+                    <option value="শপিং">শপিং</option>
+                    <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+                    <option value="শিক্ষা">শিক্ষা</option>
+                    <option value="বিনোদন">বিনোদন</option>
+                    <option value="বেতন">বেতন</option>
+                    <option value="উপহার">উপহার</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                </select>
+                <input type="date" id="date" class="date" />
+            </div>
+            <button class="btn-add" onclick="addTransaction()">যোগ করুন</button>
         </div>
-        <div class="form-row">
-            <select id="editCategory" class="cat">
-                <option value="সাধারণ">সাধারণ</option>
-                <option value="খাবার">খাবার</option>
-                <option value="যাতায়াত">যাতায়াত</option>
-                <option value="বিল">বিল</option>
-                <option value="শপিং">শপিং</option>
-                <option value="স্বাস্থ্য">স্বাস্থ্য</option>
-                <option value="শিক্ষা">শিক্ষা</option>
-                <option value="বিনোদন">বিনোদন</option>
-                <option value="বেতন">বেতন</option>
-                <option value="উপহার">উপহার</option>
-                <option value="অন্যান্য">অন্যান্য</option>
-            </select>
-            <select id="editType" class="cat">
-                <option value="income">আয়</option>
-                <option value="expense">ব্যয়</option>
-            </select>
+
+        <div class="list-header">
+            <h3>লেনদেন</h3>
+            <div class="list-actions">
+                <select class="filter-select" id="filter" onchange="render()">
+                    <option value="all">সব</option>
+                    <option value="income">আয়</option>
+                    <option value="expense">ব্যয়</option>
+                </select>
+                <button class="filter-select" onclick="exportCSV()">📤 CSV</button>
+            </div>
         </div>
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button class="btn-add" style="background: var(--text-muted);" onclick="closeEdit()">বাতিল</button>
-            <button class="btn-add" onclick="saveEdit()">সেভ করুন</button>
+        <ul id="transactionList"></ul>
+    </div>
+
+    <!-- এডিট মোডাল -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>✏️ লেনদেন সম্পাদনা</h3>
+            <div class="form-row"><input type="text" id="editDesc" class="desc" placeholder="বিবরণ" /></div>
+            <div class="form-row">
+                <input type="number" id="editAmount" class="amount" placeholder="পরিমাণ" />
+                <input type="date" id="editDate" class="date" />
+            </div>
+            <div class="form-row">
+                <select id="editCategory" class="cat">
+                    <option value="সাধারণ">সাধারণ</option>
+                    <option value="খাবার">খাবার</option>
+                    <option value="যাতায়াত">যাতায়াত</option>
+                    <option value="বিল">বিল</option>
+                    <option value="শপিং">শপিং</option>
+                    <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+                    <option value="শিক্ষা">শিক্ষা</option>
+                    <option value="বিনোদন">বিনোদন</option>
+                    <option value="বেতন">বেতন</option>
+                    <option value="উপহার">উপহার</option>
+                    <option value="অন্যান্য">অন্যান্য</option>
+                </select>
+                <select id="editType" class="cat">
+                    <option value="income">আয়</option>
+                    <option value="expense">ব্যয়</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="btn-add" style="background: var(--text-muted);" onclick="closeEdit()">বাতিল</button>
+                <button class="btn-add" onclick="saveEdit()">সেভ</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="common.js"></script>
 <script>
-    if (!checkPin()) throw new Error('locked');
+// ===== Auth =====
+let authMode = 'login';
 
-    let transactions = getTransactions();
-    let currentType = 'income';
-    let editingId = null;
+function toggleAuthMode() {
+    authMode = authMode === 'login' ? 'register' : 'login';
+    document.getElementById('authTitle').textContent = authMode === 'login' ? 'লগইন করুন' : 'রেজিস্টার করুন';
+    document.getElementById('authBtn').textContent = authMode === 'login' ? 'লগইন' : 'রেজিস্টার';
+    document.getElementById('switchText').textContent = authMode === 'login' ? 'অ্যাকাউন্ট নেই?' : 'আগেই অ্যাকাউন্ট আছে?';
+    document.querySelector('.switch a').textContent = authMode === 'login' ? 'রেজিস্টার করুন' : 'লগইন করুন';
+    setAuthMsg('');
+}
 
-    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+function setAuthMsg(text, type = '') {
+    const m = document.getElementById('authMsg');
+    m.textContent = text;
+    m.className = 'auth-msg ' + type;
+}
 
-    function setType(type) {
-        currentType = type;
-        document.getElementById('btnIncome').className = type === 'income' ? 'active-income' : '';
-        document.getElementById('btnExpense').className = type === 'expense' ? 'active-expense' : '';
+async function handleAuth() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    if (!email || password.length < 6) {
+        return setAuthMsg('সঠিক ইমেইল ও কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড দিন', 'error');
     }
 
-    function addTransaction() {
-        const desc = document.getElementById('desc').value.trim();
-        const amount = parseFloat(document.getElementById('amount').value);
-        const category = document.getElementById('category').value;
-        const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
+    setAuthMsg('অপেক্ষা করুন...', '');
 
-        if (!desc) return alert('দয়া করে বিবরণ লিখুন!');
-        if (!amount || amount <= 0) return alert('সঠিক টাকার পরিমাণ লিখুন!');
+    if (authMode === 'register') {
+        const { error } = await supabaseClient.auth.signUp({ email, password });
+        if (error) return setAuthMsg(error.message, 'error');
+        setAuthMsg('✅ রেজিস্টার সফল! ইমেইল চেক করুন (confirm চাইলে), তারপর লগইন করুন।', 'success');
+        setTimeout(() => { authMode = 'login'; toggleAuthMode(); }, 2500);
+    } else {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) return setAuthMsg(error.message, 'error');
+        setAuthMsg('✅ লগইন সফল!', 'success');
+        showApp();
+    }
+}
 
-        transactions.push({ id: Date.now(), desc, amount, category, date, type: currentType });
-        saveTransactions(transactions);
-
-        document.getElementById('desc').value = '';
-        document.getElementById('amount').value = '';
-        document.getElementById('category').value = 'সাধারণ';
-        document.getElementById('date').value = new Date().toISOString().split('T')[0];
-        render();
+// ===== অ্যাপ দেখানো =====
+async function showApp() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('appScreen').classList.add('hidden');
+        return;
     }
 
-    function deleteTx(id) {
-        if (!confirm('এই লেনদেনটি মুছে ফেলবেন?')) return;
-        transactions = transactions.filter(t => t.id !== id);
-        saveTransactions(transactions);
-        render();
-    }
-
-    function openEdit(id) {
-        const tx = transactions.find(t => t.id === id);
-        if (!tx) return;
-        editingId = id;
-        document.getElementById('editDesc').value = tx.desc;
-        document.getElementById('editAmount').value = tx.amount;
-        document.getElementById('editDate').value = tx.date;
-        document.getElementById('editCategory').value = tx.category;
-        document.getElementById('editType').value = tx.type;
-        document.getElementById('editModal').classList.add('show');
-    }
-
-    function closeEdit() {
-        document.getElementById('editModal').classList.remove('show');
-        editingId = null;
-    }
-
-    function saveEdit() {
-        const desc = document.getElementById('editDesc').value.trim();
-        const amount = parseFloat(document.getElementById('editAmount').value);
-        if (!desc || !amount || amount <= 0) return alert('সব ঘর সঠিকভাবে পূরণ করুন!');
-
-        transactions = transactions.map(t => t.id === editingId ? {
-            ...t,
-            desc,
-            amount,
-            date: document.getElementById('editDate').value,
-            category: document.getElementById('editCategory').value,
-            type: document.getElementById('editType').value
-        } : t);
-
-        saveTransactions(transactions);
-        closeEdit();
-        render();
-    }
-
-    function exportCSV() {
-        if (transactions.length === 0) return alert('কোনো লেনদেন নেই!');
-        const rows = [['বিবরণ', 'ধরন', 'ক্যাটাগরি', 'তারিখ', 'পরিমাণ']];
-        transactions.forEach(t => {
-            rows.push([t.desc, t.type === 'income' ? 'আয়' : 'ব্যয়', t.category, t.date, t.amount]);
-        });
-        const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `hisab_${new Date().toISOString().split('T')[0]}.csv`;
-        link.click();
-    }
-
-    function render() {
-        const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-        const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-
-        document.getElementById('balance').textContent = formatBDT(income - expense);
-        document.getElementById('totalIncome').textContent = formatBDT(income);
-        document.getElementById('totalExpense').textContent = formatBDT(expense);
-
-        const filter = document.getElementById('filter').value;
-        let filtered = transactions;
-        if (filter === 'income') filtered = transactions.filter(t => t.type === 'income');
-        if (filter === 'expense') filtered = transactions.filter(t => t.type === 'expense');
-        filtered = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        const list = document.getElementById('transactionList');
-        list.innerHTML = '';
-
-        if (filtered.length === 0) {
-            list.innerHTML = '<li class="empty">কোনো লেনদেন নেই 📭</li>';
+    // পিন লক চেক (যদি সেট থাকে)
+    if (hasPin() && sessionStorage.getItem('pin_unlocked') !== 'yes') {
+        const pin = prompt('🔒 ৪-সংখ্যার পিন দিন:');
+        if (!verifyPin(pin || '')) {
+            alert('ভুল পিন!');
+            await supabaseClient.auth.signOut();
+            location.reload();
             return;
         }
-
-        filtered.forEach(t => {
-            const li = document.createElement('li');
-            li.className = t.type;
-            li.innerHTML = `
-                <div class="tx-info">
-                    <div class="tx-desc">${escapeHTML(t.desc)}</div>
-                    <div class="tx-meta">${escapeHTML(t.category)} • ${t.date}</div>
-                </div>
-                <div class="tx-amount ${t.type}">${t.type === 'income' ? '+' : '−'} ${formatBDT(t.amount)}</div>
-                <div class="action-btns">
-                    <button class="edit-btn" title="এডিট">✏️</button>
-                    <button class="del-btn" title="মুছুন">🗑</button>
-                </div>
-            `;
-            li.querySelector('.edit-btn').addEventListener('click', () => openEdit(t.id));
-            li.querySelector('.del-btn').addEventListener('click', () => deleteTx(t.id));
-            list.appendChild(li);
-        });
+        sessionStorage.setItem('pin_unlocked', 'yes');
     }
 
-    document.getElementById('amount').addEventListener('keypress', e => {
-        if (e.key === 'Enter') addTransaction();
-    });
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('appScreen').classList.remove('hidden');
+    document.getElementById('userEmail').textContent = '👤 ' + session.user.email;
+    document.getElementById('date').value = todayISO();
 
+    await loadTransactions();
+}
+
+// ===== ডেটা =====
+let transactions = [];
+let currentType = 'income';
+let editingId = null;
+
+async function loadTransactions() {
+    const { data, error } = await supabaseClient
+        .from('transactions')
+        .select('*')
+        .order('date', { ascending: false });
+    if (error) { console.error(error); return; }
+    transactions = data || [];
     render();
+}
+
+function setType(t) {
+    currentType = t;
+    document.getElementById('btnIncome').className = t === 'income' ? 'active-income' : '';
+    document.getElementById('btnExpense').className = t === 'expense' ? 'active-expense' : '';
+}
+
+async function addTransaction() {
+    const desc = document.getElementById('desc').value.trim();
+    const amount = parseFloat(document.getElementById('amount').value);
+    const category = document.getElementById('category').value;
+    const date = document.getElementById('date').value || todayISO();
+
+    if (!desc) return alert('বিবরণ লিখুন!');
+    if (!amount || amount <= 0) return alert('সঠিক পরিমাণ লিখুন!');
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    const { error } = await supabaseClient.from('transactions').insert([{
+        description: desc, amount, category, date, type: currentType, user_id: user.id
+    }]);
+    if (error) return alert('ত্রুটি: ' + error.message);
+
+    document.getElementById('desc').value = '';
+    document.getElementById('amount').value = '';
+    document.getElementById('category').value = 'সাধারণ';
+    document.getElementById('date').value = todayISO();
+    await loadTransactions();
+}
+
+async function deleteTx(id) {
+    if (!confirm('মুছবেন?')) return;
+    const { error } = await supabaseClient.from('transactions').delete().eq('id', id);
+    if (error) return alert(error.message);
+    await loadTransactions();
+}
+
+function openEdit(id) {
+    const tx = transactions.find(t => t.id === id);
+    if (!tx) return;
+    editingId = id;
+    document.getElementById('editDesc').value = tx.description;
+    document.getElementById('editAmount').value = tx.amount;
+    document.getElementById('editDate').value = tx.date;
+    document.getElementById('editCategory').value = tx.category;
+    document.getElementById('editType').value = tx.type;
+    document.getElementById('editModal').classList.add('show');
+}
+
+function closeEdit() {
+    document.getElementById('editModal').classList.remove('show');
+    editingId = null;
+}
+
+async function saveEdit() {
+    const desc = document.getElementById('editDesc').value.trim();
+    const amount = parseFloat(document.getElementById('editAmount').value);
+    if (!desc || !amount || amount <= 0) return alert('সব ঘর সঠিকভাবে পূরণ করুন!');
+
+    const { error } = await supabaseClient.from('transactions').update({
+        description: desc,
+        amount,
+        date: document.getElementById('editDate').value,
+        category: document.getElementById('editCategory').value,
+        type: document.getElementById('editType').value
+    }).eq('id', editingId);
+    if (error) return alert(error.message);
+    closeEdit();
+    await loadTransactions();
+}
+
+function exportCSV() {
+    if (transactions.length === 0) return alert('কোনো ডেটা নেই!');
+    const rows = [['বিবরণ', 'ধরন', 'ক্যাটাগরি', 'তারিখ', 'পরিমাণ']];
+    transactions.forEach(t => {
+        rows.push([t.description, t.type === 'income' ? 'আয়' : 'ব্যয়', t.category, t.date, t.amount]);
+    });
+    const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `hisab_${todayISO()}.csv`;
+    a.click();
+}
+
+function render() {
+    const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+    const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+
+    document.getElementById('balance').textContent = formatBDT(income - expense);
+    document.getElementById('totalIncome').textContent = formatBDT(income);
+    document.getElementById('totalExpense').textContent = formatBDT(expense);
+
+    const filter = document.getElementById('filter').value;
+    let filtered = transactions;
+    if (filter === 'income') filtered = transactions.filter(t => t.type === 'income');
+    if (filter === 'expense') filtered = transactions.filter(t => t.type === 'expense');
+
+    const list = document.getElementById('transactionList');
+    list.innerHTML = '';
+
+    if (filtered.length === 0) {
+        list.innerHTML = '<li class="empty">কোনো লেনদেন নেই 📭</li>';
+        return;
+    }
+
+    filtered.forEach(t => {
+        const li = document.createElement('li');
+        li.className = t.type;
+        li.innerHTML = `
+            <div class="tx-info">
+                <div class="tx-desc">${escapeHTML(t.description)}</div>
+                <div class="tx-meta">${escapeHTML(t.category)} • ${t.date}</div>
+            </div>
+            <div class="tx-amount ${t.type}">${t.type === 'income' ? '+' : '−'} ${formatBDT(t.amount)}</div>
+            <div class="action-btns">
+                <button class="edit-btn" title="এডিট">✏️</button>
+                <button class="del-btn" title="মুছুন">🗑</button>
+            </div>
+        `;
+        li.querySelector('.edit-btn').onclick = () => openEdit(t.id);
+        li.querySelector('.del-btn').onclick = () => deleteTx(t.id);
+        list.appendChild(li);
+    });
+}
+
+// ===== শুরু =====
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+    if (session) showApp();
+    else {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('appScreen').classList.add('hidden');
+    }
+});
+
+showApp();
 </script>
 
 </body>
