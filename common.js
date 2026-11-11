@@ -1,27 +1,12 @@
-// ===== শেয়ার্ড ডেটা ও ফাংশন =====
-const STORAGE_KEY = 'transactions';
-const THEME_KEY = 'theme';
-const PIN_KEY = 'userPin';
+// ===== Supabase কানেকশন =====
+const SUPABASE_URL = 'https://oiluawfhquhmwksstrij.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_KBPJcPugJfyaOOVbKg9TUQ_2kgNfKxj';
 
-function getTransactions() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-}
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-function saveTransactions(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
+// ===== থিম =====
+const THEME_KEY = 'app_theme';
 
-function formatBDT(num) {
-    return '৳ ' + Number(num).toLocaleString('bn-BD', { maximumFractionDigits: 2 });
-}
-
-function escapeHTML(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-}
-
-// ===== ডার্ক মোড =====
 function applyTheme() {
     const theme = localStorage.getItem(THEME_KEY) || 'light';
     document.documentElement.setAttribute('data-theme', theme);
@@ -30,30 +15,71 @@ function applyTheme() {
 }
 
 function toggleTheme() {
-    const current = localStorage.getItem(THEME_KEY) || 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(THEME_KEY, next);
+    const cur = localStorage.getItem(THEME_KEY) || 'light';
+    localStorage.setItem(THEME_KEY, cur === 'dark' ? 'light' : 'dark');
     applyTheme();
 }
 
-// ===== পিন লক =====
-function checkPin() {
-    const savedPin = localStorage.getItem(PIN_KEY);
-    if (!savedPin) return true;
-    if (sessionStorage.getItem('unlocked') === 'yes') return true;
-    window.location.href = 'lock.html';
-    return false;
+// ===== পিন লক (Supabase Auth-এর সাথে) =====
+const PIN_KEY = 'userPin';
+
+function setPin(pin) {
+    localStorage.setItem(PIN_KEY, btoa(pin)); // base64 (শুধু লুকানোর জন্য, আসল সিকিউরিটি Auth)
+}
+
+function verifyPin(pin) {
+    const saved = localStorage.getItem(PIN_KEY);
+    if (!saved) return true;
+    return atob(saved) === pin;
+}
+
+function hasPin() {
+    return !!localStorage.getItem(PIN_KEY);
+}
+
+// ===== ফরম্যাট =====
+function formatBDT(num) {
+    return '৳ ' + Number(num || 0).toLocaleString('bn-BD', { maximumFractionDigits: 2 });
+}
+
+function escapeHTML(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
+
+// ===== তারিখ =====
+function todayISO() {
+    return new Date().toISOString().split('T')[0];
 }
 
 // ===== নেভিগেশন হাইলাইট =====
 function highlightNav() {
-    const page = window.location.pathname.split('/').pop() || 'index.html';
+    const page = location.pathname.split('/').pop() || 'index.html';
     document.querySelectorAll('nav a').forEach(a => {
         if (a.getAttribute('href') === page) a.classList.add('active-nav');
     });
 }
 
-// অটো রান
+// ===== লগআউট =====
+async function logout() {
+    if (!confirm('লগআউট করবেন?')) return;
+    await supabaseClient.auth.signOut();
+    sessionStorage.clear();
+    location.href = 'index.html';
+}
+
+// ===== চেক লগইন =====
+async function requireAuth() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+        location.href = 'index.html';
+        return null;
+    }
+    return session.user;
+}
+
+// ===== শুরু =====
 document.addEventListener('DOMContentLoaded', () => {
     applyTheme();
     highlightNav();
