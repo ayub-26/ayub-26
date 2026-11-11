@@ -3,285 +3,509 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>টু-ডু অ্যাপ</title>
+    <title>💰 আমার হিসাব - হোম</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+        :root {
+            --bg: #f4f6fb;
+            --card: #ffffff;
+            --text: #333;
+            --text-muted: #777;
+            --primary: #1e3c72;
+            --primary-2: #2a5298;
+            --income: #2ecc71;
+            --expense: #e74c3c;
+            --border: #e0e6f0;
+            --shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
+
+        [data-theme="dark"] {
+            --bg: #0f1724;
+            --card: #1a2332;
+            --text: #e8eef7;
+            --text-muted: #8a9bb4;
+            --primary: #4a7fd4;
+            --primary-2: #5b8ee6;
+            --income: #34d399;
+            --expense: #f87171;
+            --border: #2a3a52;
+            --shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
 
         body {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* নেভিগেশন */
+        nav {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 40px 20px;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
         }
 
-        .app {
-            background: #fff;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        nav a {
+            padding: 10px 18px;
+            background: var(--card);
+            color: var(--text);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
-        .app h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-        }
+        nav a:hover { border-color: var(--primary-2); transform: translateY(-2px); }
+        nav a.active-nav { background: var(--primary); color: white; }
 
-        .input-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .input-area input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+        #themeToggle {
+            padding: 10px 14px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            cursor: pointer;
             font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; }
+        .subtitle { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .balance-card .label { font-size: 0.9rem; opacity: 0.85; }
+        .balance-card .amount { font-size: 2.2rem; font-weight: bold; margin: 8px 0; }
+        .summary { display: flex; justify-content: space-around; margin-top: 15px; }
+        .summary div { text-align: center; }
+        .summary .sum-label { font-size: 0.8rem; opacity: 0.85; }
+        .summary .sum-value { font-size: 1.1rem; font-weight: bold; margin-top: 3px; }
+
+        .form-box {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .form-box h3 { margin-bottom: 12px; color: var(--primary); font-size: 1rem; }
+
+        .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+
+        .form-row input, .form-row select {
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
             outline: none;
+            background: var(--card);
+            color: var(--text);
             transition: border 0.3s;
         }
 
-        .input-area input:focus {
-            border-color: #667eea;
-        }
+        .form-row input:focus, .form-row select:focus { border-color: var(--primary-2); }
+        .form-row .desc { flex: 2; min-width: 150px; }
+        .form-row .amount { flex: 1; min-width: 110px; }
+        .form-row .date { flex: 1; min-width: 130px; }
+        .form-row .cat { flex: 1; min-width: 130px; }
 
-        .input-area button {
-            padding: 12px 20px;
-            background: #667eea;
+        .btn-add {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
         }
 
-        .input-area button:hover {
-            background: #5a6fd6;
-        }
+        .btn-add:hover { background: var(--primary-2); }
 
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .filters button {
-            padding: 6px 15px;
-            border: 2px solid #667eea;
-            background: transparent;
-            color: #667eea;
-            border-radius: 20px;
+        .type-toggle { display: flex; gap: 10px; margin-bottom: 10px; }
+        .type-toggle button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-weight: bold;
             transition: all 0.3s;
         }
+        .type-toggle button.active-income { background: var(--income); color: white; border-color: var(--income); }
+        .type-toggle button.active-expense { background: var(--expense); color: white; border-color: var(--expense); }
 
-        .filters button.active,
-        .filters button:hover {
-            background: #667eea;
-            color: white;
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .list-header h3 { color: var(--primary); }
+
+        .filter-select {
+            padding: 6px 10px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            color: var(--text);
+            font-size: 0.85rem;
+            cursor: pointer;
         }
 
-        ul#taskList {
-            list-style: none;
-        }
+        #transactionList { list-style: none; }
 
-        ul#taskList li {
+        #transactionList li {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: var(--bg);
             padding: 12px 15px;
-            background: #f7f7fb;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 10px;
+            border-left: 5px solid #ccc;
             animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
 
-        ul#taskList li .task-text {
-            flex: 1;
-            cursor: pointer;
-            margin-left: 10px;
-            word-break: break-word;
-        }
+        #transactionList li.income { border-left-color: var(--income); }
+        #transactionList li.expense { border-left-color: var(--expense); }
 
-        ul#taskList li.completed .task-text {
-            text-decoration: line-through;
-            color: #999;
-        }
+        .tx-info { flex: 1; }
+        .tx-desc { font-weight: 600; font-size: 1rem; }
+        .tx-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
 
-        ul#taskList li input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: #667eea;
-        }
+        .tx-amount { font-weight: bold; font-size: 1.05rem; margin: 0 15px; white-space: nowrap; }
+        .tx-amount.income { color: var(--income); }
+        .tx-amount.expense { color: var(--expense); }
 
-        ul#taskList li .delete-btn {
-            background: #e74c3c;
-            color: white;
+        .action-btns { display: flex; gap: 4px; }
+        .action-btns button {
+            background: transparent;
             border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
+            font-size: 1.1rem;
             cursor: pointer;
-            font-size: 0.85rem;
+            padding: 5px 8px;
+            border-radius: 5px;
+            transition: background 0.2s;
         }
+        .edit-btn:hover { background: rgba(74, 127, 212, 0.15); }
+        .del-btn:hover { background: rgba(231, 76, 60, 0.15); }
 
-        ul#taskList li .delete-btn:hover {
-            background: #c0392b;
-        }
-
-        .empty-msg {
+        .empty {
             text-align: center;
-            color: #999;
-            padding: 20px 0;
+            color: var(--text-muted);
+            padding: 30px 0;
+            background: var(--bg);
+            border-radius: 10px;
         }
 
-        .stats {
-            text-align: center;
-            margin-top: 15px;
-            color: #666;
-            font-size: 0.9rem;
+        /* এডিট মোডাল */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .modal h3 { color: var(--primary); margin-bottom: 15px; }
+
+        @media (max-width: 600px) {
+            .balance-card .amount { font-size: 1.6rem; }
+            .form-row .desc, .form-row .amount, .form-row .date, .form-row .cat { flex: 1 1 100%; }
+            .tx-amount { margin: 0 8px; font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="app">
-        <h1>📋 আমার টু-ডু</h1>
+<nav>
+    <a href="index.html">🏠 হোম</a>
+    <a href="chart.html">📊 চার্ট</a>
+    <a href="report.html">📆 রিপোর্ট</a>
+    <a href="lock.html">🔐 পিন</a>
+    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+</nav>
 
-        <div class="input-area">
-            <input type="text" id="taskInput" placeholder="নতুন কাজ লিখুন..." />
-            <button onclick="addTask()">যোগ</button>
+<div class="container">
+    <h1>💰 আমার হিসাব</h1>
+    <p class="subtitle">আয় ও ব্যয়ের সহজ হিসাব</p>
+
+    <div class="balance-card">
+        <div class="label">বর্তমান ব্যালেন্স</div>
+        <div class="amount" id="balance">৳ ০</div>
+        <div class="summary">
+            <div>
+                <div class="sum-label">মোট আয়</div>
+                <div class="sum-value" style="color: #a8e6cf;" id="totalIncome">৳ ০</div>
+            </div>
+            <div>
+                <div class="sum-label">মোট ব্যয়</div>
+                <div class="sum-value" style="color: #ffb3b3;" id="totalExpense">৳ ০</div>
+            </div>
         </div>
-
-        <div class="filters">
-            <button class="active" onclick="setFilter('all', this)">সব</button>
-            <button onclick="setFilter('active', this)">চলমান</button>
-            <button onclick="setFilter('completed', this)">সম্পন্ন</button>
-        </div>
-
-        <ul id="taskList"></ul>
-        <div class="stats" id="stats"></div>
     </div>
 
-    <script>
-        // ---- ডেটা ম্যানেজমেন্ট ----
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let currentFilter = 'all';
+    <div class="form-box">
+        <h3>নতুন লেনদেন যোগ করুন</h3>
+        <div class="type-toggle">
+            <button id="btnIncome" class="active-income" onclick="setType('income')">＋ আয়</button>
+            <button id="btnExpense" onclick="setType('expense')">－ ব্যয়</button>
+        </div>
+        <div class="form-row">
+            <input type="text" id="desc" class="desc" placeholder="বিবরণ (যেমন: বাজার)" />
+            <input type="number" id="amount" class="amount" placeholder="টাকার পরিমাণ" min="0" step="any" />
+        </div>
+        <div class="form-row">
+            <select id="category" class="cat">
+                <option value="সাধারণ">সাধারণ</option>
+                <option value="খাবার">খাবার</option>
+                <option value="যাতায়াত">যাতায়াত</option>
+                <option value="বিল">বিল</option>
+                <option value="শপিং">শপিং</option>
+                <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+                <option value="শিক্ষা">শিক্ষা</option>
+                <option value="বিনোদন">বিনোদন</option>
+                <option value="বেতন">বেতন</option>
+                <option value="উপহার">উপহার</option>
+                <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+            <input type="date" id="date" class="date" />
+        </div>
+        <button class="btn-add" onclick="addTransaction()">যোগ করুন</button>
+    </div>
 
-        const taskInput = document.getElementById('taskInput');
-        const taskList = document.getElementById('taskList');
-        const stats = document.getElementById('stats');
+    <div class="list-header">
+        <h3>লেনদেনের তালিকা</h3>
+        <div style="display: flex; gap: 8px;">
+            <select class="filter-select" id="filter" onchange="render()">
+                <option value="all">সব</option>
+                <option value="income">আয়</option>
+                <option value="expense">ব্যয়</option>
+            </select>
+            <button class="filter-select" onclick="exportCSV()" title="CSV ডাউনলোড">📤 CSV</button>
+        </div>
+    </div>
+    <ul id="transactionList"></ul>
+</div>
 
-        // ---- সেভ ----
-        function save() {
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
+<!-- এডিট মোডাল -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <h3>✏️ লেনদেন সম্পাদনা</h3>
+        <div class="form-row">
+            <input type="text" id="editDesc" class="desc" placeholder="বিবরণ" />
+        </div>
+        <div class="form-row">
+            <input type="number" id="editAmount" class="amount" placeholder="পরিমাণ" />
+            <input type="date" id="editDate" class="date" />
+        </div>
+        <div class="form-row">
+            <select id="editCategory" class="cat">
+                <option value="সাধারণ">সাধারণ</option>
+                <option value="খাবার">খাবার</option>
+                <option value="যাতায়াত">যাতায়াত</option>
+                <option value="বিল">বিল</option>
+                <option value="শপিং">শপিং</option>
+                <option value="স্বাস্থ্য">স্বাস্থ্য</option>
+                <option value="শিক্ষা">শিক্ষা</option>
+                <option value="বিনোদন">বিনোদন</option>
+                <option value="বেতন">বেতন</option>
+                <option value="উপহার">উপহার</option>
+                <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+            <select id="editType" class="cat">
+                <option value="income">আয়</option>
+                <option value="expense">ব্যয়</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button class="btn-add" style="background: var(--text-muted);" onclick="closeEdit()">বাতিল</button>
+            <button class="btn-add" onclick="saveEdit()">সেভ করুন</button>
+        </div>
+    </div>
+</div>
 
-        // ---- কাজ যোগ ----
-        function addTask() {
-            const text = taskInput.value.trim();
-            if (!text) {
-                alert('দয়া করে কিছু লিখুন!');
-                return;
-            }
-            tasks.push({ id: Date.now(), text, completed: false });
-            taskInput.value = '';
-            save();
-            render();
-        }
+<script src="common.js"></script>
+<script>
+    if (!checkPin()) throw new Error('locked');
 
-        // এন্টার চাপলে যোগ হবে
-        taskInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addTask();
-        });
+    let transactions = getTransactions();
+    let currentType = 'income';
+    let editingId = null;
 
-        // ---- টগল (সম্পন্ন/চলমান) ----
-        function toggleTask(id) {
-            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-            save();
-            render();
-        }
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
-        // ---- ডিলিট ----
-        function deleteTask(id) {
-            if (!confirm('এই কাজটি মুছে ফেলবেন?')) return;
-            tasks = tasks.filter(t => t.id !== id);
-            save();
-            render();
-        }
+    function setType(type) {
+        currentType = type;
+        document.getElementById('btnIncome').className = type === 'income' ? 'active-income' : '';
+        document.getElementById('btnExpense').className = type === 'expense' ? 'active-expense' : '';
+    }
 
-        // ---- ফিল্টার ----
-        function setFilter(filter, btn) {
-            currentFilter = filter;
-            document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            render();
-        }
+    function addTransaction() {
+        const desc = document.getElementById('desc').value.trim();
+        const amount = parseFloat(document.getElementById('amount').value);
+        const category = document.getElementById('category').value;
+        const date = document.getElementById('date').value || new Date().toISOString().split('T')[0];
 
-        // ---- রেন্ডার ----
-        function render() {
-            taskList.innerHTML = '';
+        if (!desc) return alert('দয়া করে বিবরণ লিখুন!');
+        if (!amount || amount <= 0) return alert('সঠিক টাকার পরিমাণ লিখুন!');
 
-            let filtered = tasks;
-            if (currentFilter === 'active') filtered = tasks.filter(t => !t.completed);
-            if (currentFilter === 'completed') filtered = tasks.filter(t => t.completed);
+        transactions.push({ id: Date.now(), desc, amount, category, date, type: currentType });
+        saveTransactions(transactions);
 
-            if (filtered.length === 0) {
-                taskList.innerHTML = '<p class="empty-msg">কোনো কাজ নেই 🎉</p>';
-            }
-
-            filtered.forEach(task => {
-                const li = document.createElement('li');
-                if (task.completed) li.classList.add('completed');
-
-                li.innerHTML = `
-                    <input type="checkbox" ${task.completed ? 'checked' : ''} />
-                    <span class="task-text">${escapeHTML(task.text)}</span>
-                    <button class="delete-btn">মুছুন</button>
-                `;
-
-                li.querySelector('input').addEventListener('change', () => toggleTask(task.id));
-                li.querySelector('.task-text').addEventListener('click', () => toggleTask(task.id));
-                li.querySelector('.delete-btn').addEventListener('click', () => deleteTask(task.id));
-
-                taskList.appendChild(li);
-            });
-
-            // স্ট্যাটস
-            const done = tasks.filter(t => t.completed).length;
-            stats.textContent = `মোট: ${tasks.length} | সম্পন্ন: ${done} | বাকি: ${tasks.length - done}`;
-        }
-
-        // XSS থেকে সুরক্ষা
-        function escapeHTML(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        // ---- শুরু ----
+        document.getElementById('desc').value = '';
+        document.getElementById('amount').value = '';
+        document.getElementById('category').value = 'সাধারণ';
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
         render();
-    </script>
+    }
+
+    function deleteTx(id) {
+        if (!confirm('এই লেনদেনটি মুছে ফেলবেন?')) return;
+        transactions = transactions.filter(t => t.id !== id);
+        saveTransactions(transactions);
+        render();
+    }
+
+    function openEdit(id) {
+        const tx = transactions.find(t => t.id === id);
+        if (!tx) return;
+        editingId = id;
+        document.getElementById('editDesc').value = tx.desc;
+        document.getElementById('editAmount').value = tx.amount;
+        document.getElementById('editDate').value = tx.date;
+        document.getElementById('editCategory').value = tx.category;
+        document.getElementById('editType').value = tx.type;
+        document.getElementById('editModal').classList.add('show');
+    }
+
+    function closeEdit() {
+        document.getElementById('editModal').classList.remove('show');
+        editingId = null;
+    }
+
+    function saveEdit() {
+        const desc = document.getElementById('editDesc').value.trim();
+        const amount = parseFloat(document.getElementById('editAmount').value);
+        if (!desc || !amount || amount <= 0) return alert('সব ঘর সঠিকভাবে পূরণ করুন!');
+
+        transactions = transactions.map(t => t.id === editingId ? {
+            ...t,
+            desc,
+            amount,
+            date: document.getElementById('editDate').value,
+            category: document.getElementById('editCategory').value,
+            type: document.getElementById('editType').value
+        } : t);
+
+        saveTransactions(transactions);
+        closeEdit();
+        render();
+    }
+
+    function exportCSV() {
+        if (transactions.length === 0) return alert('কোনো লেনদেন নেই!');
+        const rows = [['বিবরণ', 'ধরন', 'ক্যাটাগরি', 'তারিখ', 'পরিমাণ']];
+        transactions.forEach(t => {
+            rows.push([t.desc, t.type === 'income' ? 'আয়' : 'ব্যয়', t.category, t.date, t.amount]);
+        });
+        const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `hisab_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+    }
+
+    function render() {
+        const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+
+        document.getElementById('balance').textContent = formatBDT(income - expense);
+        document.getElementById('totalIncome').textContent = formatBDT(income);
+        document.getElementById('totalExpense').textContent = formatBDT(expense);
+
+        const filter = document.getElementById('filter').value;
+        let filtered = transactions;
+        if (filter === 'income') filtered = transactions.filter(t => t.type === 'income');
+        if (filter === 'expense') filtered = transactions.filter(t => t.type === 'expense');
+        filtered = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const list = document.getElementById('transactionList');
+        list.innerHTML = '';
+
+        if (filtered.length === 0) {
+            list.innerHTML = '<li class="empty">কোনো লেনদেন নেই 📭</li>';
+            return;
+        }
+
+        filtered.forEach(t => {
+            const li = document.createElement('li');
+            li.className = t.type;
+            li.innerHTML = `
+                <div class="tx-info">
+                    <div class="tx-desc">${escapeHTML(t.desc)}</div>
+                    <div class="tx-meta">${escapeHTML(t.category)} • ${t.date}</div>
+                </div>
+                <div class="tx-amount ${t.type}">${t.type === 'income' ? '+' : '−'} ${formatBDT(t.amount)}</div>
+                <div class="action-btns">
+                    <button class="edit-btn" title="এডিট">✏️</button>
+                    <button class="del-btn" title="মুছুন">🗑</button>
+                </div>
+            `;
+            li.querySelector('.edit-btn').addEventListener('click', () => openEdit(t.id));
+            li.querySelector('.del-btn').addEventListener('click', () => deleteTx(t.id));
+            list.appendChild(li);
+        });
+    }
+
+    document.getElementById('amount').addEventListener('keypress', e => {
+        if (e.key === 'Enter') addTransaction();
+    });
+
+    render();
+</script>
 
 </body>
 </html>
