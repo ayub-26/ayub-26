@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 পিন লক</title>
+    <style>
+        :root {
+            --bg: #0f1724; --card: #1a2332; --text: #e8eef7;
+            --primary: #4a7fd4; --primary-2: #5b8ee6; --border: #2a3a52;
+            --danger: #f87171; --success: #34d399;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0f1724, #1a2332);
+            color: var(--text); min-height: 100vh;
+            display: flex; justify-content: center; align-items: center; padding: 20px;
+        }
+
+        .lock-card {
+            background: var(--card); border-radius: 25px; padding: 35px 30px;
+            max-width: 380px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            text-align: center; border: 1px solid var(--border);
+        }
+
+        .lock-icon {
+            font-size: 3.5rem; margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 { color: var(--primary-2); margin-bottom: 8px; font-size: 1.4rem; }
+        .subtitle { color: #8a9bb4; font-size: 0.9rem; margin-bottom: 25px; }
+
+        .pin-display {
+            display: flex; justify-content: center; gap: 12px; margin-bottom: 25px;
+        }
+        .pin-dot {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: transparent; border: 2px solid var(--border);
+            transition: all 0.2s;
+        }
+        .pin-dot.filled {
+            background: var(--primary-2); border-color: var(--primary-2);
+            box-shadow: 0 0 12px rgba(91, 142, 230, 0.6);
+        }
+
+        .numpad {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;
+        }
+        .numpad button {
+            padding: 18px; font-size: 1.4rem; font-weight: bold;
+            background: rgba(255,255,255,0.05); color: var(--text);
+            border: 1px solid var(--border); border-radius: 15px; cursor: pointer;
+            transition: all 0.15s;
+        }
+        .numpad button:hover { background: rgba(91, 142, 230, 0.2); border-color: var(--primary-2); }
+        .numpad button:active { transform: scale(0.95); }
+        .numpad button.clear { color: var(--danger); }
+        .numpad button.enter { color: var(--success); }
+
+        .msg {
+            min-height: 20px; font-size: 0.9rem; margin-bottom: 15px;
+        }
+        .msg.error { color: var(--danger); }
+        .msg.success { color: var(--success); }
+
+        .btn-link {
+            display: inline-block; padding: 10px 20px; background: transparent;
+            color: #8a9bb4; border: 1px solid var(--border); border-radius: 10px;
+            cursor: pointer; font-size: 0.85rem; margin-top: 10px;
+            transition: all 0.3s; text-decoration: none;
+        }
+        .btn-link:hover { color: var(--text); border-color: var(--primary-2); }
+
+        .setup-info {
+            background: rgba(91, 142, 230, 0.1); border-radius: 10px;
+            padding: 12px; margin-bottom: 20px; font-size: 0.85rem; color: #a8b8d0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="lock-card">
+    <div class="lock-icon" id="lockIcon">🔒</div>
+    <h1 id="title">অ্যাপ লক করা আছে</h1>
+    <p class="subtitle" id="subtitle">আপনার ৪-সংখ্যার পিন দিন</p>
+
+    <div class="setup-info" id="setupInfo" style="display: none;">
+        💡 প্রথমবার ব্যবহার করছেন? একটি নতুন ৪-সংখ্যার পিন সেট করুন।<br>
+        <small>মনে রাখবেন — এই পিন ছাড়া অ্যাপে ঢোকা যাবে না!</small>
+    </div>
+
+    <div class="pin-display" id="pinDisplay">
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+        <div class="pin-dot"></div>
+    </div>
+
+    <div class="msg" id="msg"></div>
+
+    <div class="numpad" id="numpad">
+        <button onclick="press('1')">1</button>
+        <button onclick="press('2')">2</button>
+        <button onclick="press('3')">3</button>
+        <button onclick="press('4')">4</button>
+        <button onclick="press('5')">5</button>
+        <button onclick="press('6')">6</button>
+        <button onclick="press('7')">7</button>
+        <button onclick="press('8')">8</button>
+        <button onclick="press('9')">9</button>
+        <button class="clear" onclick="clearPin()">✕</button>
+        <button onclick="press('0')">0</button>
+        <button class="enter" onclick="submitPin()">✓</button>
+    </div>
+
+    <a href="index.html" class="btn-link" id="backLink" style="display: none;">→ অ্যাপে ফিরে যান</a>
+    <button class="btn-link" id="removeBtn" onclick="removePin()" style="display: none;">🔓 পিন সরান</button>
+</div>
+
+<script src="common.js"></script>
+<script>
+    let enteredPin = '';
+    let setupMode = false;
+    let confirmStage = false;
+    let firstPin = '';
+
+    const savedPin = localStorage.getItem(PIN_KEY);
+    const unlocked = sessionStorage.getItem('unlocked') === 'yes';
+
+    // ইনিশিয়াল স্টেট
+    if (savedPin && unlocked) {
+        // ইতিমধ্যে আনলকড
+        showUnlockedState();
+    } else if (!savedPin) {
+        // কোনো পিন সেট নেই → সেটআপ মোড
+        setupMode = true;
+        document.getElementById('title').textContent = 'পিন সেট করুন';
+        document.getElementById('subtitle').textContent = 'আপনার প্রথম ৪-সংখ্যার পিন দিন';
+        document.getElementById('setupInfo').style.display = 'block';
+        document.getElementById('lockIcon').textContent = '🔑';
+    }
+
+    function showUnlockedState() {
+        document.getElementById('title').textContent = '✅ আনলকড';
+        document.getElementById('subtitle').textContent = 'অ্যাপটি এখন unlocked';
+        document.getElementById('lockIcon').textContent = '🔓';
+        document.getElementById('numpad').style.display = 'none';
+        document.getElementById('pinDisplay').style.display = 'none';
+        document.getElementById('backLink').style.display = 'inline-block';
+        document.getElementById('removeBtn').style.display = 'inline-block';
+    }
+
+    function press(num) {
+        if (enteredPin.length >= 4) return;
+        enteredPin += num;
+        updateDots();
+    }
+
+    function clearPin() {
+        enteredPin = '';
+        updateDots();
+        setMsg('');
+    }
+
+    function updateDots() {
+        document.querySelectorAll('.pin-dot').forEach((dot, i) => {
+            dot.classList.toggle('filled', i < enteredPin.length);
+        });
+    }
+
+    function setMsg(text, type) {
+        const msg = document.getElementById('msg');
+        msg.textContent = text;
+        msg.className = 'msg' + (type ? ' ' + type : '');
+    }
+
+    function submitPin() {
+        if (enteredPin.length < 4) {
+            setMsg('⚠️ ৪-সংখ্যার পিন দিন', 'error');
+            return;
+        }
+
+        if (setupMode) {
+            if (!confirmStage) {
+                // প্রথম ধাপ
+                firstPin = enteredPin;
+                confirmStage = true;
+                enteredPin = '';
+                updateDots();
+                document.getElementById('subtitle').textContent = 'পিনটি আবার দিন নিশ্চিত করতে';
+                setMsg('পুনরায় পিনটি লিখুন', '');
+            } else {
+                // দ্বিতীয় ধাপ
+                if (enteredPin === firstPin) {
+                    localStorage.setItem(PIN_KEY, firstPin);
+                    setMsg('✅ পিন সেট হয়েছে!', 'success');
+                    setTimeout(() => {
+                        sessionStorage.setItem('unlocked', 'yes');
+                        showUnlockedState();
+                    }, 800);
+                } else {
+                    setMsg('❌ পিন মেলেনি, আবার চেষ্টা করুন', 'error');
+                    firstPin = '';
+                    confirmStage = false;
+                    enteredPin = '';
+                    updateDots();
+                    document.getElementById('subtitle').textContent = 'আপনার প্রথম ৪-সংখ্যার পিন দিন';
+                }
+            }
+        } else {
+            // লগইন মোড
+            if (enteredPin === savedPin) {
+                sessionStorage.setItem('unlocked', 'yes');
+                setMsg('✅ সফল! প্রবেশ করছি...', 'success');
+                document.getElementById('lockIcon').textContent = '🔓';
+                setTimeout(() => window.location.href = 'index.html', 700);
+            } else {
+                setMsg('❌ ভুল পিন!', 'error');
+                enteredPin = '';
+                updateDots();
+                // শেক অ্যানিমেশন
+                document.querySelector('.lock-card').animate([
+                    { transform: 'translateX(0)' },
+                    { transform: 'translateX(-10px)' },
+                    { transform: 'translateX(10px)' },
+                    { transform: 'translateX(0)' }
+                ], { duration: 300 });
+            }
+        }
+    }
+
+    function removePin() {
+        if (!confirm('পিন সরিয়ে ফেললে কোনো সুরক্ষা থাকবে না। নিশ্চিত?')) return;
+        localStorage.removeItem(PIN_KEY);
+        sessionStorage.removeItem('unlocked');
+        alert('✅ পিন সরানো হয়েছে!');
+        location.reload();
+    }
+
+    // কীবোর্ড সাপোর্ট
+    document.addEventListener('keydown', (e) => {
+        if (e.key >= '0' && e.key <= '9') press(e.key);
+        else if (e.key === 'Backspace') { enteredPin = enteredPin.slice(0, -1); updateDots(); }
+        else if (e.key === 'Enter') submitPin();
+    });
+</script>
+
+</body>
+</html>
