@@ -172,6 +172,34 @@ footer{text-align:center;padding:30px 20px 50px;color:var(--muted);font-size:.9r
 @media(max-width:900px){.g4,.stats{grid-template-columns:repeat(2,1fr)}.g3,.three{grid-template-columns:repeat(2,1fr)}.hero,.about,.contact{grid-template-columns:1fr}.float.f1{left:6px}.float.f2{right:6px}}
 @media(max-width:600px){.g4,.g3,.g2,.three,.work form,#joinForm{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}section{padding:30px 0}.brand span:last-child{font-size:.95rem}.btn{padding:11px 20px}.mc{padding:24px 18px}}
 @media(prefers-reduced-motion:reduce){:root,body::before,body::after{animation:none}html{scroll-behavior:auto}}
+
+/* ===== AYUB master visual language applied to the existing Bengali website ===== */
+:root{--ink:#f7f3e8;--muted:#b7c9c2;--ad:#d7b56d;--gold:#d7b56d;--gold2:#f0d89b;--deep:#061712;--deep2:#0b241d;--glass:rgba(11,36,29,.78);--edge:rgba(215,181,109,.20)}
+body{color:var(--ink);background:radial-gradient(circle at 12% 8%,rgba(215,181,109,.13),transparent 30%),radial-gradient(circle at 88% 16%,rgba(45,138,103,.16),transparent 34%),linear-gradient(135deg,#061712,#0b241d 55%,#061712) fixed}
+body::before{background:rgba(215,181,109,.12)}body::after{background:rgba(45,138,103,.13)}
+nav .glass,.glass{background:rgba(11,36,29,.78);border-color:rgba(215,181,109,.20);box-shadow:0 14px 38px rgba(0,0,0,.22)}
+.brand,.hero h1,.title h2,.about h3,.card h3,.mc h3{color:#f0d89b}
+.logo{background:linear-gradient(135deg,#0e3026,#173f35);color:#f0d89b;border:1px solid rgba(215,181,109,.55)}
+nav ul a{color:#d6e0dc}nav ul a:hover,.contact a{color:#f0d89b}
+.btn{background:linear-gradient(135deg,#173f35,#0b261f);color:#fffdf7;border-color:rgba(215,181,109,.45);box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.btn.alt{background:rgba(255,255,255,.08);color:#f0d89b;border-color:rgba(215,181,109,.28)}
+.btn.wa{background:linear-gradient(135deg,#d8f6e3,#aee7c4);color:#0c3d27}
+.hero h1 span{background:linear-gradient(transparent 58%,rgba(215,181,109,.34) 58%)}
+.hero p,.title p,.card>p,.card .sub,.stat span,.about p,.mini p,.skill p,details p,.mc p,.mc ul,.contact p,footer{color:var(--muted)}
+.badge,.chips span,.skill,.tab,.q{color:#f7f3e8;background:rgba(255,255,255,.07);border:1px solid rgba(215,181,109,.20)}
+.card,.reference-card,.formula,.work,.core,.mini{background:linear-gradient(155deg,rgba(14,48,38,.96),rgba(7,27,22,.96));border:1px solid rgba(215,181,109,.18);box-shadow:0 18px 48px rgba(0,0,0,.18)}
+.card::before{background:linear-gradient(90deg,#173f35,#d7b56d,#2d8a67)}
+.ic,.flow span,.rule,.box{background:linear-gradient(135deg,#173f35,#244b3d);color:#f0d89b;border:1px solid rgba(215,181,109,.22)}
+.stat b,.flow i,.lbl,.source,.section-flag{color:#f0d89b}
+details{background:rgba(11,36,29,.78);border:1px solid rgba(215,181,109,.18);border-radius:18px}summary{color:#f0d89b}
+input,textarea,select{background:#f7f3e8;color:#17251f;border-color:rgba(215,181,109,.45)}
+.mc{background:linear-gradient(160deg,#0e3026,#061712);border:1px solid rgba(215,181,109,.3);color:#f7f3e8}.x{background:#173f35;color:#f0d89b}
+.float{background:rgba(11,36,29,.88);color:#f0d89b;border:1px solid rgba(215,181,109,.25)}
+footer{border-top:1px solid rgba(215,181,109,.18)}
+.menu-toggle{display:none;border:1px solid rgba(215,181,109,.35);background:#0e3026;color:#f0d89b;border-radius:12px;padding:9px 13px;font:inherit;font-size:1.15rem;cursor:pointer}
+@media(max-width:1000px){nav{top:8px}nav .glass{position:relative}.menu-toggle{display:block;margin-left:auto}nav ul{display:none;position:absolute;top:calc(100% + 10px);left:12px;right:12px;padding:16px;background:#071b16;border:1px solid rgba(215,181,109,.25);border-radius:18px;box-shadow:0 18px 42px rgba(0,0,0,.3);flex-direction:column;gap:12px}nav ul.mobile-open{display:flex}}
+@media(prefers-reduced-motion:reduce){body::before,body::after{animation:none}}
+
 </style>
 </head>
 <body>
@@ -182,6 +210,7 @@ footer{text-align:center;padding:30px 20px 50px;color:var(--muted);font-size:.9r
     <li><a href="#about">পরিচিতি</a></li><li><a href="#system">3D সিস্টেম</a></li><li><a href="#model">AYUB মডেল</a></li>
     <li><a href="#programs">প্রোগ্রাম</a></li><li><a href="#groups">ক্লাস</a></li><li><a href="#gallery">গ্যালারি</a></li><li><a href="#contact">যোগাযোগ</a></li>
   </ul>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-label="মেনু খুলুন" aria-expanded="false">☰</button>
   <div class="navr">
     <button class="btn alt sm" onclick="openOv('langOv')" aria-label="ভাষা বদলান"><i class="fas fa-globe"></i> <span id="curLang">ভাষা</span></button>
     <button class="btn sm" onclick="openJoin()"><i class="fas fa-user-plus"></i> জয়েন করুন</button>
@@ -562,5 +591,6 @@ showLang(getCookieLang());
 function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'bn',autoDisplay:false},'gt')}
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+<script>(()=>{const t=document.getElementById('menuToggle');const l=document.querySelector('nav ul');if(!t||!l)return;t.addEventListener('click',()=>{const o=l.classList.toggle('mobile-open');t.setAttribute('aria-expanded',String(o));t.setAttribute('aria-label',o?'মেনু বন্ধ করুন':'মেনু খুলুন')});l.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{l.classList.remove('mobile-open');t.setAttribute('aria-expanded','false');t.setAttribute('aria-label','মেনু খুলুন')}))})();</script>
 </body>
 </html>
